@@ -86,9 +86,9 @@ geotime = tribble(
     'paleozoic', 'silurian'     , 'llandovery'   , 'rhuddanian'   , 443.8   ,
     'paleozoic', 'ordovician'   , NA_character_  , NA_character_  , 486.85  ,
   ) %>%
-    mutate(from = -abs(from)) %>%
-    mutate(to = from %>% lag() %>% replace_na(0)) %>%
-    mutate(across(c(era, period, epoch, age), str_to_sentence))
+    dplyr::mutate(from = -abs(from)) %>%
+    dplyr::mutate(to = from %>% lag() %>% replace_na(0)) %>%
+    dplyr::mutate(across(c(era, period, epoch, age), str_to_sentence))
 
 geotime
 

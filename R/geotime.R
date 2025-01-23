@@ -1,5 +1,5 @@
 load_geotime = function() {
-	period_fill = tribble(
+	period_fill = dplyr::tribble(
 		~period        , ~fill,
 		'quaternary'   , 'deeppink1',
 		'neogene'      , 'darkorchid1',
@@ -11,71 +11,108 @@ load_geotime = function() {
 		'carboniferous', 'palegreen1',
 		'devonian'     , 'dodgerblue1',
 		'silurian'     , 'wheat1',
-		'ordovician'   , 'dodgerblue1',
+		'ordovician'   , 'aquamarine',
 		'cambrian'     , 'tan1',
 	) %>%
-		mutate(across(c(period), str_to_sentence)) %>%
+		dplyr::mutate(dplyr::across(c(.data$period),
+									stringr::str_to_sentence)) %>%
 		truncate_geotime_labels()
 
 	readr::read_tsv(
 		system.file("extdata", "geotime.tsv", package="arboretum"),
-		col_types = cols(
-			from = col_double(),
-			to = col_double(),
-			.default = col_character()
+		col_types = readr::cols(
+			from = readr::col_double(),
+			to = readr::col_double(),
+			.default = readr::col_character()
 		)
 	) %>%
-		mutate(across(c(period, epoch), str_to_sentence)) %>%
+		dplyr::mutate(dplyr::across(c(.data$period, .data$epoch),
+									stringr::str_to_sentence)) %>%
 		truncate_geotime_labels() %>%
-		left_join(period_fill, by='period')
+		dplyr::left_join(period_fill, by='period')
 }
 
 truncate_geotime_labels = function(df) {
 	if (!is.null(df[['period']])) {
 		df$period %<>%
-			str_replace('Quaternary', 'Q')
+			stringr::str_replace('Quaternary', 'Q')
 	}
 	if (!is.null(df[['epoch']])) {
 		df$epoch %<>%
-			str_replace('Pliocene', 'Pl.') %>%
-			str_replace('Pleistocene', 'Pl.') %>%
-			str_replace('Holocene', '') %>%
-			str_replace('ocene$', 'oc.') %>%
-			str_replace('ian$', '.')
+			stringr::str_replace('Pliocene', 'Pl.') %>%
+			stringr::str_replace('Pleistocene', 'Pl.') %>%
+			stringr::str_replace('Holocene', '') %>%
+			stringr::str_replace('ocene$', 'oc.') %>%
+			stringr::str_replace('ian$', '.')
 	}
 	if (!is.null(df[['age']])) {
 		df$age %<>%
-			str_replace('ian$', '.')
+			stringr::str_replace('ian$', '.')
 	}
 	return(df)
 }
 
-split_geotime_by_timescale = function(geotime, timescale) {
+split_geotime_by_timescale = function(geotime) {
+
 	era = geotime %>%
-		group_by(era) %>%
-		summarise(from=min(from), to=max(to), .groups = 'drop') %>%
-		arrange(desc(from))
+		dplyr::group_by(.data$era) %>%
+		dplyr::summarise(from=min(.data$from),
+						 to=max(.data$to),
+						 .groups = 'drop') %>%
+		dplyr::arrange(dplyr::desc(.data$from))
+
 	period = geotime %>%
-		group_by(era, period, fill) %>%
-		summarise(from=min(from), to=max(to), .groups = 'drop') %>%
-		select(era, period, from, to, fill) %>%
-		arrange(desc(from))
+		# dplyr::group_by(dplyr::across(dplyr::one_of('era', 'period', 'fill'))) %>%
+		dplyr::group_by(.data$era,
+						.data$period,
+						.data$fill) %>%
+		dplyr::summarise(from=min(.data$from),
+						 to=max(.data$to),
+						 .groups = 'drop') %>%
+		# dplyr::select(dplyr::one_of('era', 'period', 'from', 'to', 'fill')) %>%
+		dplyr::select(.data$era,
+					  .data$period,
+					  .data$from,
+					  .data$to,
+					  .data$fill) %>%
+		dplyr::arrange(dplyr::desc(.data$from))
+
 	epoch = geotime %>%
-		group_by(era, period, epoch, fill) %>%
-		summarise(from=min(from), to=max(to), .groups = 'drop') %>%
-		group_by(era, period) %>%
-		mutate(
-			rank = rank(from),
-			amount = 1 / (max(rank) + 1) * (rank - 1),
-			fill = colorspace::darken(fill, amount)
+		# dplyr::group_by(dplyr::across(dplyr::one_of('era', 'period', 'epoch', 'fill'))) %>%
+		dplyr::group_by(.data$era,
+						.data$period,
+						.data$epoch,
+						.data$fill) %>%
+		dplyr::summarise(from=min(.data$from),
+						 to=max(.data$to),
+						 .groups = 'drop') %>%
+		dplyr::group_by(.data$era,
+						.data$period) %>%
+		dplyr::mutate(
+			rank = rank(.data$from),
+			amount = 1 / (max(.data$rank) + 1) * (.data$rank - 1),
+			fill = colorspace::darken(.data$fill, .data$amount)
 		) %>%
-		ungroup() %>%
-		select(era, period, epoch, from, to, fill) %>%
-		arrange(desc(from))
+		dplyr::ungroup() %>%
+		# dplyr::select(dplyr::one_of('era', 'period', 'epoch', 'from', 'to', 'fill')) %>%
+		dplyr::select(.data$era,
+					  .data$period,
+					  .data$epoch,
+					  .data$from,
+					  .data$to,
+					  .data$fill) %>%
+		dplyr::arrange(dplyr::desc(.data$from))
+
 	age = geotime %>%
-		group_by(era, period, epoch, age) %>%
-		summarise(from=min(from), to=max(to), .groups = 'drop') %>%
-		arrange(desc(from))
+		dplyr::group_by(.data$era,
+						.data$period,
+						.data$epoch,
+						.data$age) %>%
+		dplyr::summarise(from=min(.data$from),
+						 to=max(.data$to),
+						 .groups = 'drop') %>%
+		dplyr::arrange(dplyr::desc(.data$from))
+
 	list(
 		era = era,
 		period = period,
@@ -85,14 +122,14 @@ split_geotime_by_timescale = function(geotime, timescale) {
 }
 
 load_events = function() {
-  tribble(
-    ~label  , ~ma    , ~col,
-    'GABI'  , 2.7    , 'blue',
-    'K-Pg'  , 66     , 'red',
-    'Tr-J'  , 201.3  , 'red',
-    'P-Tr'  , 251.902, 'red',
-    'Late D', 371.1  , 'red',
-    'O-S'   , 445    , 'red',
-  ) %>%
-    mutate(ma = -abs(ma))
+	dplyr::tribble(
+		~label  , ~ma    , ~col,
+		'GABI'  , 2.7    , 'blue',
+		'K-Pg'  , 66     , 'red',
+		'Tr-J'  , 201.3  , 'red',
+		'P-Tr'  , 251.902, 'red',
+		'Late D', 371.1  , 'red',
+		'O-S'   , 445    , 'red',
+	) %>%
+		dplyr::mutate(ma = -abs(.data$ma))
 }

@@ -181,7 +181,7 @@ tips = tribble(
     'acanthostega'     , 365   , NA, '',
     # 'Ichthyostegalia'  , 368   , 329,
 ) %>%
-	mutate(to = if_else(is.na(to), from, to))
+	dplyr::mutate(to = if_else(is.na(to), from, to))
 
 tips
 
@@ -282,11 +282,11 @@ relations = tribble(
 
 relations
 
-bind_rows(tips, relations) %>%
-	mutate(across(c(from, to), ~-abs(.x))) %>%
-	mutate(children = children %>% map_chr(function(x) str_to_lower(str_c(x, collapse=',')))) %>%
-	mutate(across(c(taxon, children), str_to_lower)) %>%
-	select(taxon, from, to, children, notes) %>%
+dplyr::bind_rows(tips, relations) %>%
+	dplyr::mutate(across(c(from, to), ~-abs(.x))) %>%
+	dplyr::mutate(children = children %>% map_chr(function(x) str_to_lower(str_c(x, collapse=',')))) %>%
+	dplyr::mutate(across(c(taxon, children), str_to_lower)) %>%
+	dplyr::select(taxon, from, to, children, notes) %>%
 	write_tsv('inst/extdata/tree_data.tsv')
 
 

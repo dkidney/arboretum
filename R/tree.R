@@ -1,7 +1,27 @@
 #' plot tree data
+#' @param taxon TODO
+#' @param collapse TODO
 #' @export
 #' @examples
+#' library(arboretum)
 #' tree()
+#' tree('amniota', collapse=c('archosauromorpha',
+#'                            'therapsida',
+#'                            'lepidosauromorpha'))
+#' tree('therapsida', collapse='mammalia')
+#' tree('mammalia')
+#' tree('archosauromorpha', collapse=c('dinosauria',
+#'                                     'pterosauria',
+#'                                     'pseudosuchia',
+#'                                     'sauropterygia'))
+#' tree('pseudosuchia')
+#' tree('dinosauria', collapse = c('sauropoda',
+#'                                 'ornithopoda',
+#'                                 'theropoda',
+#'                                 'ankylosauria',
+#'                                 'ceratopsia'))
+#' tree('theropoda', collapse=c('avialae'))
+
 tree = function(taxon=NULL, collapse=NULL) {
 	if (is.null(collapse)) {
 		collapse = c(
@@ -18,20 +38,29 @@ tree = function(taxon=NULL, collapse=NULL) {
 		collapse_taxa(collapse) %>%
 		arrange_tree()
 
-	relations = inner_join(
+	relations = dplyr::inner_join(
 		df %>%
 			get_nodes() %>%
-			select(taxon, x=from, y, children) %>%
-			mutate(children = children %>% map(~tibble(child=.x))) %>%
-			unnest(children),
+			dplyr::select(.data$taxon,
+						  x=.data$from,
+						  .data$y,
+						  .data$children) %>%
+			# dplyr::select(dplyr::one_of('taxon', 'from', 'y', 'children')) %>%
+			# dplyr::rename(x=.data$from) %>%
+			dplyr::mutate(children = .data$children %>% purrr::map(~dplyr::tibble(child=.x))) %>%
+			tidyr::unnest(.data$children),
 		df %>%
-			select(child=taxon, xend=from, yend=y),
+			dplyr::select(child=.data$taxon,
+						  xend=.data$from,
+						  yend=.data$y),
 		by='child'
 	) %>%
-		arrange(taxon, yend)
+		dplyr::arrange(.data$taxon,
+					   .data$yend)
 
 	plt = df %>%
-		ggplot(aes(x=from, y=y))
+		ggplot2::ggplot(ggplot2::aes(x=.data$from,
+									 y=.data$y))
 
 
 	# geotime ------------------------------------------------------------------
@@ -40,11 +69,11 @@ tree = function(taxon=NULL, collapse=NULL) {
 
 	# filter periods to match tree data
 	periods = geotime %>%
-		filter(to > min(df$from, na.rm = TRUE)) %>%
-		select(period) %>%
-		distinct
+		dplyr::filter(.data$to > min(df$from, na.rm = TRUE)) %>%
+		dplyr::select(.data$period) %>%
+		dplyr::distinct()
 	geotime %<>%
-		inner_join(periods, by='period')
+		dplyr::inner_join(periods, by='period')
 
 	y_max = max(df$y, na.rm = TRUE)
 	y_min = min(df$y, na.rm = TRUE)
@@ -77,14 +106,14 @@ tree = function(taxon=NULL, collapse=NULL) {
 	x_breaks = rev(seq(0, x_min, -25))
 
 	plt = plt +
-		scale_y_continuous(
+		ggplot2::scale_y_continuous(
 			# breaks = 0:max(df$y),
 			# labels = 0:sum(df$is_tip),
 			# expand = c(bottom, ?, top, ?)
 			expand = c(abs(y_min_era - y_min) / h, 0,
 					   (y_max_header - y_max) / h, 0),
 		) +
-		scale_x_continuous(
+		ggplot2::scale_x_continuous(
 			breaks = x_breaks,
 			labels = -x_breaks,
 			# expand = c(left, ?, right, ?)
@@ -109,8 +138,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 	fill = TRUE
 
 	plt = plt +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_max_age,
 			ymin = y_min_era,
 			fill=NA,
@@ -122,8 +151,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 
 	# eras
 	plt = plt +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_max_era,
 			ymin = y_min_era,
 			fill=NA,
@@ -132,8 +161,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 			data=geotime$era,
 			inherit.aes = FALSE
 		) +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_min_header,
 			ymin = y_max_era,
 			fill=NA,
@@ -142,8 +171,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 			data=geotime$era,
 			inherit.aes = FALSE
 		) +
-		geom_text(
-			aes(x = (from + to) / 2, label = era),
+		ggplot2::geom_text(
+			ggplot2::aes(x = (.data$from + .data$to) / 2, label = .data$era),
 			y = (y_max_era + y_min_era) / 2,
 			data=geotime$era,
 			size = era_textsize,
@@ -151,8 +180,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 
 	# periods
 	plt = plt +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_min_header,
 			ymin = y_max_period,
 			fill=NA,
@@ -161,8 +190,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 			data=geotime$period,
 			inherit.aes = FALSE
 		) +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_min_epoch,
 			ymin = y_min_period,
 			fill = if (fill) geotime$period$fill else NA,
@@ -172,8 +201,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 			data=geotime$period,
 			inherit.aes = FALSE
 		) +
-		geom_text(
-			aes(x = (from + to) / 2, label = period),
+		ggplot2::geom_text(
+			ggplot2::aes(x = (.data$from + .data$to) / 2, label = .data$period),
 			y = (y_max_period + y_min_period) / 2,
 			data=geotime$period,
 			size = period_textsize,
@@ -181,8 +210,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 
 	# epochs
 	plt = plt +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_min_header,
 			ymin = y_max_epoch,
 			fill = if (fill) geotime$epoch$fill else NA,
@@ -192,8 +221,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 			data=geotime$epoch,
 			inherit.aes = FALSE
 		) +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_max_epoch,
 			ymin = y_min_epoch,
 			fill = if (fill) geotime$epoch$fill else NA,
@@ -203,17 +232,17 @@ tree = function(taxon=NULL, collapse=NULL) {
 			data=geotime$epoch,
 			inherit.aes = FALSE
 		) +
-		geom_text(
-			aes(x = (from + to) / 2, label = epoch),
+		ggplot2::geom_text(
+			ggplot2::aes(x = (.data$from + .data$to) / 2, label = .data$epoch),
 			y = (y_max_epoch + y_min_epoch) / 2,
-			data=geotime$epoch %>% filter(!is.na(epoch)),
+			data=geotime$epoch %>% dplyr::filter(!is.na(.data$epoch)),
 			size = epoch_textsize,
 		)
 
 	# ages
 	plt = plt +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_min_header,
 			ymin = y_max_age,
 			fill=NA,
@@ -222,8 +251,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 			data=geotime$age,
 			inherit.aes = FALSE
 		) +
-		geom_rect(
-			aes(xmin=from, xmax=to),
+		ggplot2::geom_rect(
+			ggplot2::aes(xmin=.data$from, xmax=.data$to),
 			ymax = y_max_age,
 			ymin = y_min_age,
 			fill=NA,
@@ -232,10 +261,10 @@ tree = function(taxon=NULL, collapse=NULL) {
 			data=geotime$age,
 			inherit.aes = FALSE
 		) +
-		geom_text(
-			aes(x = (from + to) / 2, label = age),
+		ggplot2::geom_text(
+			ggplot2::aes(x = (.data$from + .data$to) / 2, label = .data$age),
 			y = y_min_age + (y_max_age - y_min_age) * 0.05,
-			data=geotime$age %>% filter(!is.na(age)),
+			data=geotime$age %>% dplyr::filter(!is.na(.data$age)),
 			size = age_textsize,
 			angle=90,
 			hjust=0,
@@ -245,11 +274,11 @@ tree = function(taxon=NULL, collapse=NULL) {
 	# events -------------------------------------------------------------------
 
 	events = load_events() %>%
-		filter(ma > min(geotime$period$from))
+		dplyr::filter(.data$ma > min(geotime$period$from))
 
 	plt = plt +
-		geom_segment(
-			aes(x=ma, xend=ma),
+		ggplot2::geom_segment(
+			ggplot2::aes(x=.data$ma, xend=.data$ma),
 			data = events,
 			y=y_max_epoch,
 			yend=y_max_main,
@@ -257,8 +286,8 @@ tree = function(taxon=NULL, collapse=NULL) {
 			lty=1, lwd=0.5,
 			inherit.aes = FALSE
 		) +
-		geom_text(
-			aes(x=ma, label=label),
+		ggplot2::geom_text(
+			ggplot2::aes(x=.data$ma, label=.data$label),
 			data = events,
 			# y=y_max_main,
 			y = (y_min_header + y_max_header) / 2,
@@ -274,48 +303,48 @@ tree = function(taxon=NULL, collapse=NULL) {
 	textsize = 2.5
 	plt = plt +
 		geom_sigmoid(
-			aes(x=x, y=y, xend=xend, yend=yend),
+			ggplot2::aes(x=.data$x, y=.data$y, xend=.data$xend, yend=.data$yend),
 			data = relations,
 			col = 'grey50'
 		) +
-		geom_segment(
-			aes(xend=to, yend=y),
+		ggplot2::geom_segment(
+			ggplot2::aes(xend=.data$to, yend=.data$y),
 			data=df %>% get_tips()
 		) +
-		geom_text(
-			aes(x=(from + to) / 2, label=taxon),
+		ggplot2::geom_text(
+			ggplot2::aes(x=(.data$from + .data$to) / 2, label=.data$taxon),
 			data=df %>% get_tips(),
 			vjust=-0.5,
 			size = textsize,
 		) +
-		geom_point(
+		ggplot2::geom_point(
 			data=df %>% get_tips(),
 			size = pointsize,
 		) +
-		geom_point(
-			aes(x=to),
-			data=df %>% get_tips() %>% filter(to < 0),
+		ggplot2::geom_point(
+			ggplot2::aes(x=.data$to),
+			data=df %>% get_tips() %>% dplyr::filter(.data$to < 0),
 			size = pointsize,
 		) +
-		geom_point(
+		ggplot2::geom_point(
 			data=df %>% get_nodes(),
 			size = pointsize,
 		) +
-		geom_text(
-			aes(label=taxon),
+		ggplot2::geom_text(
+			ggplot2::aes(label=.data$taxon),
 			data=df %>% get_nodes(),
 			vjust=-0.5,
 			size = textsize,
 		) +
-		theme(
-			panel.grid.major = element_blank(),
-			panel.grid.minor = element_blank(),
-			panel.background = element_blank(),
-			axis.title.x=element_blank(),
-			# axis.line.x=element_line(),
-			axis.title.y=element_blank(),
-			axis.text.y=element_blank(),
-			axis.ticks.y=element_blank(),
+		ggplot2::theme(
+			panel.grid.major = ggplot2::element_blank(),
+			panel.grid.minor = ggplot2::element_blank(),
+			panel.background = ggplot2::element_blank(),
+			axis.title.x = ggplot2::element_blank(),
+			# axis.line.x = ggplot2::element_line(),
+			axis.title.y = ggplot2::element_blank(),
+			axis.text.y = ggplot2::element_blank(),
+			axis.ticks.y = ggplot2::element_blank(),
 			legend.position = "none"
 		)
 
@@ -323,19 +352,20 @@ tree = function(taxon=NULL, collapse=NULL) {
 	return(plt)
 }
 
-highlight_clade = function(plt, clade, col=1, alpha=0.25) {
-  temp = plt$data %>% get_clade(clade)
-  plt +
-    annotate(
-      "rect",
-      xmin=min(temp$from) - 1,
-      xmax=max(temp$to, na.rm=TRUE) + 1,
-      ymin=min(temp$index) - 0.25,
-      ymax=max(temp$index) + 0.5,
-      alpha=alpha,
-      fill=col,
-      col=NA,
-    )
+
+highlight_taxon = function(plt, taxon, col=1, alpha=0.25) {
+	temp = plt$data %>% subset_taxon(taxon)
+	plt +
+		ggplot2::annotate(
+			"rect",
+			xmin=min(temp$from, na.rm=TRUE) - 1,
+			xmax=max(temp$to, na.rm=TRUE) + 1,
+			ymin=min(temp$y, na.rm=TRUE) - 0.25,
+			ymax=max(temp$y, na.rm=TRUE) + 0.5,
+			alpha=alpha,
+			fill=col,
+			col=NA,
+		)
 }
 
 

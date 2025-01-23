@@ -25,17 +25,17 @@ tree = function(clade=NULL,
   events = load_events()
 
   # data for plotting
-  df = bind_rows(tips, nodes) %>%
-    mutate(col = name %>% str_detect('\\*$') %>% if_else('red', 'black')) %>%
-    mutate(name = name %>% str_remove('\\*$')) %>%
-    mutate(col = col %>% replace_na('black')) %>%
+  df = dplyr::bind_rows(tips, nodes) %>%
+    dplyr::mutate(col = name %>% stringr::str_detect('\\*$') %>% if_else('red', 'black')) %>%
+    dplyr::mutate(name = name %>% str_remove('\\*$')) %>%
+    dplyr::mutate(col = col %>% replace_na('black')) %>%
     check_tree_data %>%
     get_clade(clade) %>%
     collapse_clades(collapse) %>%
     add_depths() %>%
     arrange_tree()
-    # arrange(desc(depth), desc(from)) %>%
-    # mutate(index = nrow(.):1) %>%
+    # dplyr::arrange(desc(depth), desc(from)) %>%
+    # dplyr::mutate(index = nrow(.):1) %>%
     # reindex_tree_data()
 
   # filter geotime
@@ -512,12 +512,12 @@ load_tips = function() {
     # 'agnatha'        , 518, 0,
     # Selachii # modern sharks
   ) %>%
-    mutate(name = str_to_lower(name)) %>%
-	mutate(to = if_else(is.na(to), from, to)) %>%
-    mutate(across(c(from, to), ~-abs(.x))) %>%
-    mutate(is_tip = TRUE) %>%
-    mutate(index = nrow(.):1) %>%
-    select(index, everything())
+    dplyr::mutate(name = str_to_lower(name)) %>%
+	dplyr::mutate(to = if_else(is.na(to), from, to)) %>%
+    dplyr::mutate(across(c(from, to), ~-abs(.x))) %>%
+    dplyr::mutate(is_tip = TRUE) %>%
+    dplyr::mutate(index = nrow(.):1) %>%
+    dplyr::select(index, everything())
 }
 
 load_nodes = function() {
@@ -621,12 +621,12 @@ load_nodes = function() {
 	'temnospondyli'    , 330   , c('eryops', 'archegosauridae', 'lissamphibia'),
     'lissamphibia'     , 250   , c('anura', 'urodela', 'gymnophiona'),
   ) %>%
-    mutate(name = str_to_lower(name)) %>%
-    mutate(from = -abs(from)) %>%
-    mutate(children = children %>% map(str_to_lower)) %>%
-    mutate(is_tip = FALSE) %>%
-    # mutate(col = name %>% str_detect('\\*$') %>% if_else('red', 'black')) %>%
-    # mutate(name = name %>% str_remove('\\*$')) %>%
+    dplyr::mutate(name = str_to_lower(name)) %>%
+    dplyr::mutate(from = -abs(from)) %>%
+    dplyr::mutate(children = children %>% purrr::map(str_to_lower)) %>%
+    dplyr::mutate(is_tip = FALSE) %>%
+    # dplyr::mutate(col = name %>% stringr::str_detect('\\*$') %>% if_else('red', 'black')) %>%
+    # dplyr::mutate(name = name %>% str_remove('\\*$')) %>%
     identity
 }
 
@@ -714,9 +714,9 @@ load_geotime = function() {
     'paleozoic', 'silurian'     , 'llandovery'   , 'rhuddanian'   , 443.8   ,
     'paleozoic', 'ordovician'   , NA_character_  , NA_character_  , 486.85  ,
   ) %>%
-    mutate(from = -abs(from)) %>%
-    mutate(to = from %>% lag() %>% replace_na(0)) %>%
-    mutate(across(c(era, period, epoch, age), str_to_sentence)) %>%
+    dplyr::mutate(from = -abs(from)) %>%
+    dplyr::mutate(to = from %>% lag() %>% replace_na(0)) %>%
+    dplyr::mutate(across(c(era, period, epoch, age), str_to_sentence)) %>%
     truncate_geotime_labels()
 
   epoch_fill = tribble(
@@ -756,7 +756,7 @@ load_geotime = function() {
     'cambrian'     , 'series 2'     , 'tan2',
     'cambrian'     , 'terreneuvian' , 'tan1',
   ) %>%
-    mutate(across(c(period, epoch), str_to_sentence)) %>%
+    dplyr::mutate(across(c(period, epoch), str_to_sentence)) %>%
     truncate_geotime_labels()
 
   # scales::show_col(as.vector())
@@ -787,7 +787,7 @@ load_geotime = function() {
 
   geotime = timescales %>%
     set_names(str_c(., 's')) %>%
-    map(function(timescale){
+    purrr::map(function(timescale){
       geotime %>%
         group_by(across(all_of(timescales[1:which(timescales == timescale)]))) %>%
         summarise(
@@ -795,7 +795,7 @@ load_geotime = function() {
           to=max(to),
           .groups = 'drop'
         ) %>%
-        arrange(desc(from))
+        dplyr::arrange(desc(from))
     })
 
   geotime$periods %<>%
@@ -870,7 +870,7 @@ load_extinctions = function() {
     'Late D', 372,
     'Late O', 445,
   ) %>%
-    mutate(ma = -abs(ma))
+    dplyr::mutate(ma = -abs(ma))
 }
 
 load_events = function() {
@@ -878,7 +878,7 @@ load_events = function() {
     ~label, ~ma,
     'GABI', 2.7,
   ) %>%
-    mutate(ma = -abs(ma))
+    dplyr::mutate(ma = -abs(ma))
 }
 
 check_tree_data = function(df) {
@@ -946,14 +946,14 @@ reindex_tree_data = function(df) {
 
   tips = df %>%
     filter(is_tip) %>%
-    # arrange(desc(index)) %>%
-    mutate(index = 1:nrow(.)) %>%
+    # dplyr::arrange(desc(index)) %>%
+    dplyr::mutate(index = 1:nrow(.)) %>%
     identity
   nodes = df %>%
     filter(!is_tip) %>%
-    mutate(index = NA_integer_)
-  df = bind_rows(tips, nodes) %>%
-    select(index, everything())
+    dplyr::mutate(index = NA_integer_)
+  df = dplyr::bind_rows(tips, nodes) %>%
+    dplyr::select(index, everything())
 
   while (any(is.na(df$index))) {
     for (i in 1:nrow(df)) { #i=1
@@ -967,7 +967,7 @@ reindex_tree_data = function(df) {
     }
   }
 
-  df %<>% arrange(desc(is_tip), desc(index))
+  df %<>% dplyr::arrange(desc(is_tip), desc(index))
 
   return(df)
 
@@ -999,8 +999,8 @@ collapse_clade = function(df, clade) {
   df$is_tip[df$name == clade] = TRUE
   df$index[df$name == clade] = round(mean(df_clade$index, na.rm = TRUE))
   df$children[df$name == clade] = list(NULL)
-  df = bind_rows(
-    df %>% filter(is_tip) %>% arrange(desc(index)),
+  df = dplyr::bind_rows(
+    df %>% filter(is_tip) %>% dplyr::arrange(desc(index)),
     df %>% filter(!is_tip)
   )
   return(df)
@@ -1015,7 +1015,7 @@ collapse_clades = function(df, clades=NULL) {
 }
 
 collapse_families = function(df) {
-  families = df$name %>% keep(str_detect, 'idae$')
+  families = df$name %>% keep(stringr::str_detect, 'idae$')
   for (family in families) {
     df = collapse_clade(df, clade=family)
   }
@@ -1036,7 +1036,7 @@ get_children = function(df, parent) {
 # # df=plt$data ; i=1 ; j=1 ; k=1
 # order_tree_data = function(df) {
 #   names = c()
-#   gen0 = get_roots(df) %>% arrange(from)
+#   gen0 = get_roots(df) %>% dplyr::arrange(from)
 #   for (i in 1:nrow(gen0)) {
 #     name = gen0$name[i]
 #     names = c(names, name)
@@ -1153,7 +1153,7 @@ add_depths = function(df) {
 arrange_tree = function(df) { # df = plt$data ; print(df, n=Inf)
   max_depth = max(df$depth)
   rank_names = str_c('rank', 1:max_depth)
-  df$ranks = map(1:nrow(df), function(x) NULL)
+  df$ranks = purrr::map(1:nrow(df), function(x) NULL)
   for (i in 1:nrow(df)) { # i=44
     ranks = NULL
     clade = df$name[i]
@@ -1168,12 +1168,12 @@ arrange_tree = function(df) { # df = plt$data ; print(df, n=Inf)
     ranks
     df$ranks[[i]] = ranks
   }
-  # df$ranks %>% set_names(df$name) %>% bind_rows(.id = 'name') %>% print(n=Inf) %>% arrange(across(one_of(rank_names)))
+  # df$ranks %>% set_names(df$name) %>% dplyr::bind_rows(.id = 'name') %>% print(n=Inf) %>% dplyr::arrange(across(one_of(rank_names)))
   df %>%
-    mutate(ranks = ranks %>% map(function(x) as_tibble(as.list(x)))) %>%
+    dplyr::mutate(ranks = ranks %>% purrr::map(function(x) as_tibble(as.list(x)))) %>%
     unnest(ranks) %>%
-    arrange(across(one_of(rank_names))) %>%
-    select(-one_of(rank_names)) %>%
+    dplyr::arrange(across(one_of(rank_names))) %>%
+    dplyr::select(-one_of(rank_names)) %>%
     reindex_tree_data() %>%
     # filter(name %in% c('tetanurae', 'ceratosauria')) %>%
     # print(n=Inf)
