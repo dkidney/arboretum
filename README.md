@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of arboretum is to …
+Plot customised phylogentic trees.
 
 ## Installation
 
@@ -18,35 +18,43 @@ You can install the development version of arboretum from
 devtools::install_github("dkidney/arboretum")
 ```
 
-## Example
+## Examples
 
-This is a basic example which shows you how to solve a common problem:
+Plot the default tree.
 
 ``` r
 library(arboretum)
-## basic example code
+tree() # default settings
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
+Create customised trees by selecting a specific taxon and/or collapsing
+specific taxa.
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+tree(taxon='amniota', 
+     collapse=c('archosauromorpha', 'therapsida', 'lepidosauromorpha'))
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
-You can also embed plots, for example:
+``` r
+tree(taxon='archosauromorpha', 
+     collapse=c('dinosauria', 'pterosauria', 'pseudosuchia', 'sauropterygia'))
+```
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+``` r
+tree('dinosauria', 
+     collapse = c('sauropoda', 'ornithopoda', 'theropoda', 'ankylosauria', 'ceratopsia'))
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+``` r
+tree(taxon='tetanurae', collapse=c('avialae'))
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />

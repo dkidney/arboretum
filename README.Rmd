@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of arboretum is to ...
+Plot customised phylogentic trees.
 
 ## Installation
 
@@ -29,27 +29,33 @@ You can install the development version of arboretum from [GitHub](https://githu
 devtools::install_github("dkidney/arboretum")
 ```
 
-## Example
+## Examples
 
-This is a basic example which shows you how to solve a common problem:
+Plot the default tree.
 
-```{r example}
+```{r fig.asp = 0.6, fig.width = 10}
 library(arboretum)
-## basic example code
+tree() # default settings
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+Create customised trees by selecting a specific taxon and/or collapsing specific taxa.
 
-```{r cars}
-summary(cars)
+```{r fig.asp = 0.6, fig.width = 10}
+tree(taxon='amniota', 
+	 collapse=c('archosauromorpha', 'therapsida', 'lepidosauromorpha'))
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
+```{r fig.asp = 0.6, fig.width = 10}
+tree(taxon='archosauromorpha', 
+	 collapse=c('dinosauria', 'pterosauria', 'pseudosuchia', 'sauropterygia'))
 ```
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+
+```{r fig.asp = 0.6, fig.width = 10}
+tree('dinosauria', 
+	 collapse = c('sauropoda', 'ornithopoda', 'theropoda', 'ankylosauria', 'ceratopsia'))
+```
+
+```{r fig.asp = 0.6, fig.width = 10}
+tree(taxon='tetanurae', collapse=c('avialae'))
+```
