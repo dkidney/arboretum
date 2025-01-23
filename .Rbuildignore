@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^arboretum\.Rproj$
+
+scripts
+^LICENSE\.md$
+^README\.Rmd$

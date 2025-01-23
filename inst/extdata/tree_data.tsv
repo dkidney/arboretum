@@ -1,0 +1,228 @@
+taxon	from	to	children	notes
+staurikosaurus	-233.23	-228		
+herrerasaurus	-231.4	-228.91		
+eodromaeus	-231.4	-229		'dawn runner', Argentina
+coelophysis	-215	-208.5		
+dilophosaurus	-195.2	-183.7		two-crested lizard
+ceratosaurus	-153	-148		'horn lizard', USA
+noasauridae	-164	-66		
+abelisauridae	-143	-66		'Abel's lizards'
+megalosauridae	-170	-145		incl. Megalosaurus, Torvosaurus
+baryonyx	-130	-125		'heavy claw', UK
+spinosaurus	-100	-94		'spine lizard', North Africa
+allosaurus	-155	-143.1		
+metriacanthosauridae	-174	-125		'moderately-spined lizards'
+tyrannotitan	-113	-100.5		'tyrant titan', Argentina
+giganotosaurus	-99.6	-95		'giant southern lizard', Argentina
+carcharodontosaurus	-100	-94		'jagged toothed lizard', Northwest Africa
+tyrannosauridae	-81.9	-66		
+ornitholestes	-154	-154		
+compsognathidae	-151.5	-108		incl. Compsognathus, Sinosauropteryx
+ornithomimidae	-96	-66		
+deinocheiridae	-115	-69		
+alvarezsauroidea	-160	-66		
+therizinosauria	-145	-66		
+oviraptorosauria	-130	-66		
+troodontidae	-150	-66		'wounding tooth', USA (Montana), incl. Troodon
+deinonychus	-115	-108		
+velociraptor	-75	-71		
+scansoriopterygidae	-165	-156		'climbing wings', China, incl. Scansoriopteryx, Epidexipteryx
+microraptor	-125	-120		
+archaeopteryx	-150.8	-148.5		'old-wing', Southern Germany
+enantiornithes	-136	-66		'opposite birds'
+ichthyornis	-95	-83.5		
+hesperornis	-83.6	-72		
+galloanserae	-72	-0		maastrichtian
+phorusrhacidae	-43	-0.1		terror bids
+rheidae	-56	-0		
+casuariiformes	-23	-0		cassowarys and emus
+apterygidae	-23	-0		kiwis
+struthionidae	-21	-0		
+dinornithiformes	-17	-6e-4		moas, incl Dinornis
+aepyornithiformes	-2.58	-0.001		 elephant birds, incl Aepyornis
+massospondylidae	-227	-176		
+plateosauridae	-225	-190		
+vulcanodontidae	-199	-175		
+mamenchisauridae	-184.5	-114		
+cetiosauridae	-178	-161		
+diplodocidae	-170	-136.4		
+brachiosauridae	-160	-100		
+camarasauridae	-155	-145		
+euhelopodidae	-145	-88		
+titanosauria	-140	-66		
+heterodontosauridae	-201	-140		
+scelidosaurus	-196.5	-183		
+stegosauria	-169	-100.5		
+nodosauridae	-155	-66		incl. Polacanthus
+ankylosauridae	-122	-66		
+dryosauridae	-164	-115		
+hypsilophodontidae	-130	-125		
+iguanodontidae	-126	-122		
+hadrosauridae	-86	-66		
+psittacosaurus	-125	-105		
+ceratopsidae	-82	-66		
+protoceratopsidae	-75	-71		
+pachycephalosauria	-100	-66		
+dimorphodontidae	-208	-182		
+rhamphorhynchidae	-182	-148.5		
+pterodactylus	-150.8	-148.5		winged finger
+ornithocheiridae	-140	-90		
+anhangueridae	-140	-92.5		
+azhdarchidae	-92	-66		includes Quetzalcoatlus
+pteranodontia	-92	-66		
+ctenosauriscidae	-247.5	-237		all species had large 'sails' on their backs
+poposauridae	-237	-201.3		bipedal carnivores
+shuvosauridae	-235	-201.3		theropod-like pseudosuchians
+prestosuchidae	-247	-225		
+phytosauria	-242	-201.4		
+rauisuchia	-240	-200		
+aetosauria	-231.4	-201.4		
+saurosuchus	-231.4	-225		
+ornithosuchidae	-228	-203.6		
+sphenosuchia	-228	-152		
+teleosauridae	-183	-145		
+metriorhynchidae	-168	-125		
+sarcosuchus	-133	-112		
+sebecidae	-67.6	-11.8		the latest surviving group of non-crocodilian crocodylomorphs
+alligatoroidea*	-78	-0		campanian
+crocodyloidea*	-70	-0		maastrichtian
+gavialoidea*	-70	-0		maastrichtian
+rhynchosauria	-251.5	-225		
+ichthyosauromorpha	-251.3	-90		
+nothosauroidea	-251	-210		
+pachypleurosauria	-251	-227		
+placodontia	-245	-201.3		
+pistosaurus	-247.2	-237		
+pliosauridae	-228	-89.3		incl. Liopleurodon (166–155) Pliosaurus (155.7–147) Kronosaurus (125–99.6)
+plesiosauridae	-199.6	-174.7		
+leptocleididae	-145	-100.5		
+elasmosauridae	-130	-66		
+thalattosauria	-247	-201.4		
+araeoscelidia	-302	-275.6		
+testudinata	-210	-0		
+rhynchocephalia	-240	-0		
+mosasauria	-121	-66		
+gekkota	-100	-0		
+varanidae	-80	-0		
+chamaeleonidae	-26	-0		
+snakes	-94	-0		
+mesosauria	-299	-270.6		
+pareiasauria	-265	-252		
+ophiacodontidae	-308	-273		
+edaphosauridae	-307	-272		
+diadectidae	-305	-256		incl. diadectes = 'crosswise-biter' one of the first herbivorous tetrapods, one of the first fully terrestrial vertebrates to attain large size
+sphenacodontidae	-300	-272		'wedge point tooth family' includes Dimetrodon
+moschops	-265	-260		
+gorgonopsia	-270	-252		
+dicynodontia	-268	-201.4		'two dog tooth' includes Lystrosaurus
+therocephalia	-266	-242		'beast head'
+morganucodonta	-210	-140		
+multituberculata	-166	-40		
+monotremata	-125	-0		
+marsupalia	-66	-0		
+proboscidea	-60	-0		
+sirenia	-55.8	-0		
+cingulata	-58.7	-0		armadillos including Glyptodont
+pilosa	-55.8	-0		sloths and anteaters
+chiroptera	-56	-0		
+carnivora	-51.88	-0		
+hyaenodontidae	-55.2	-16.9		
+perissodactyla	-56	-0		Tapiridae, Brontotheriidae, Equidae, Chalicotheriidae, Rhinocerotidae, Paraceratheriidae
+basilosauridae	-43	-33.9		
+mysticeti	-56	-0		
+odontoceti	-33.9	-0		
+andrewsarchus	-47.8	-37.71		
+entelodontidae	-37.2	-15.97		
+lagomorpha	-59	-0		
+rodentia	-59	-0		
+primates	-65.9	-0		
+eryops	-299	-273		
+archegosauridae	-297	-252		includes Prionosuchus
+gymnophiona	-223	-0		caecilian
+anura	-200	-0		frogs and toads
+urodela	-168	-0		salamanders
+diplocaulus	-306	-255		
+tiktaalik	-375	-375		
+elginerpeton	-375	-375		
+ichthyostega	-365	-360		
+acanthostega	-365	-365		
+aves*	-75	NA	neognathae,palaeognathae	NA
+neognathae	-72	NA	galloanserae,neoaves	NA
+neoaves	-62.5	NA	phorusrhacidae	NA
+palaeognathae	-60	NA	rheidae,casuariiformes,apterygidae,struthionidae,dinornithiformes,aepyornithiformes	NA
+afrotheria	-65	NA	proboscidea,sirenia	NA
+amniota	-323	NA	sauropsida,synapsida	NA
+ankylosauria	-167	NA	nodosauridae,ankylosauridae	NA
+anomodontia	-270	NA	dicynodontia	NA
+archelosauria	-260	NA	archosauromorpha,pantestudines	NA
+artiodactyla	-56	NA	cetacea,andrewsarchus,entelodontidae	NA
+archosauria	-248	NA	avemetatarsalia,pseudosuchia	NA
+archosauromorpha	-260	NA	rhynchosauria,archosauria,ichthyosauromorpha,sauropterygia,thalattosauria	NA
+avemetatarsalia	-247	NA	dinosauria,pterosauria	NA
+cetacea	-56	NA	basilosauridae,odontoceti,mysticeti	NA
+crocodylomorpha	-235	NA	sphenosuchia,crocodyliformes,thalattosuchia	NA
+crocodyliformes	-225	NA	crocodilia,sarcosuchus,sebecidae	NA
+crocodilia	-100	NA	alligatoroidea,crocodyloidea,gavialoidea	NA
+cynodontia	-260	NA	mammalia,morganucodonta	NA
+dinosauria*	-240	NA	saurischia,ornithischia	NA
+euarchontoglires	-66	NA	lagomorpha,rodentia,primates	NA
+eureptilia	-311	NA	diapsida,araeoscelidia	NA
+diapsida	-302	NA	sauria	NA
+laurasiatheria	-65	NA	chiroptera,carnivora,perissodactyla,artiodactyla,hyaenodontidae	NA
+lepidosauromorpha	-252	NA	squamata,rhynchocephalia	NA
+lizards	-168	NA	mosasauria,varanidae,gekkota,chamaeleonidae	NA
+mammalia	-225	NA	theria,monotremata,multituberculata	NA
+marginocephalia*	-165	NA	ceratopsia,pachycephalosauria	NA
+ceratopsia	-161	NA	psittacosaurus,ceratopsidae,protoceratopsidae	NA
+ornithischia*	-235	NA	thyreophora,heterodontosauridae,ornithopoda,marginocephalia	NA
+thyreophora	-201	NA	scelidosaurus,ankylosauria,stegosauria	NA
+ornithocheiroidea	-145	NA	ornithocheiridae,azhdarchidae,pteranodontia,anhangueridae	NA
+ornithopoda*	-170	NA	dryosauridae,hypsilophodontidae,iguanodontidae,hadrosauridae	NA
+pantestudines	-240	NA	testudinata	NA
+placentalia*	-90	NA	xenarthra,afrotheria,laurasiatheria,euarchontoglires	NA
+parareptilia	-306	NA	pareiasauria,mesosauria	NA
+poposauroidea	-248	NA	poposauridae,shuvosauridae,ctenosauriscidae	NA
+pistosauroidea	-251	NA	pistosaurus,plesiosauria	NA
+plesiosauria*	-232	NA	pliosauridae,plesiosauridae,elasmosauridae,leptocleididae	NA
+pseudosuchia	-248	NA	saurosuchus,prestosuchidae,poposauroidea,ornithosuchidae,phytosauria,aetosauria,rauisuchia,crocodylomorpha	NA
+pterosauria	-228	NA	pterodactyloidea,dimorphodontidae,rhamphorhynchidae	NA
+pterodactyloidea	-162.7	NA	pterodactylus,ornithocheiroidea	NA
+sauria	-265.8	NA	lepidosauromorpha,archelosauria	NA
+saurischia*	-237	NA	sauropodomorpha,theropoda	NA
+sauropodomorpha	-230	NA	massospondylidae,plateosauridae,sauropoda	NA
+sauropoda	-201	NA	vulcanodontidae,mamenchisauridae,cetiosauridae,diplodocidae,brachiosauridae,camarasauridae,euhelopodidae,titanosauria	NA
+sauropsida	-311	NA	parareptilia,eureptilia	NA
+sauropterygia*	-255	NA	nothosauroidea,pachypleurosauria,placodontia,pistosauroidea	NA
+sphenacodontia	-304	NA	sphenacodontidae,therapsida	NA
+squamata	-168	NA	lizards,snakes	NA
+synapsida	-318	NA	edaphosauridae,diadectidae,ophiacodontidae,sphenacodontia	NA
+theropoda*	-236	NA	herrerasauridae,eodromaeus,coelophysoidea,ceratosauria,tetanurae	NA
+coelophysoidea	-227	-183	dilophosaurus,coelophysis	NA
+herrerasauridae	-233.23	NA	herrerasaurus,staurikosaurus	NA
+megalosauroidea*	-175	NA	spinosauridae,megalosauridae	NA
+spinosauridae	-139	NA	spinosaurus,baryonyx	NA
+ceratosauria	-199.3	NA	ceratosaurus,noasauridae,abelisauridae	NA
+tetanurae*	-201	NA	megalosauroidea,carnosauria,coelurosauria	NA
+tetrapoda	-370	NA	amniota,temnospondyli,lepospondyli	NA
+carnosauria*	-180	NA	allosauridae,metriacanthosauridae,carcharodontosauridae	NA
+allosauridae	-179.17	NA	allosaurus	NA
+carcharodontosauridae	-154	NA	carcharodontosaurus,giganotosaurus,tyrannotitan	NA
+paraves*	-167	NA	scansoriopterygidae,deinonychosauria,avialae	NA
+deinonychosauria	-167	NA	dromaeosauridae,troodontidae	NA
+maniraptora*	-167	NA	alvarezsauroidea,therizinosauria,oviraptorosauria,paraves	NA
+avialae	-150.8	NA	archaeopteryx,enantiornithes,euornithes	NA
+euornithes	-130.7	NA	aves,ichthyornis,hesperornis	NA
+coelurosauria*	-170	NA	ornitholestes,tyrannosauroidea,maniraptora,compsognathidae,ornithomimosauria	NA
+ornithomimosauria	-140	NA	ornithomimidae,deinocheiridae	NA
+dromaeosauridae	-145	NA	deinonychus,velociraptor,microraptor	NA
+tyrannosauroidea	-166	NA	tyrannosauridae	NA
+thalattosuchia	-201	NA	teleosauridae,metriorhynchidae	NA
+therapsida	-279.5	NA	anomodontia,dinocephalia,gorgonopsia,cynodontia,therocephalia	NA
+dinocephalia	-279	NA	moschops	NA
+theria*	-125	NA	placentalia,marsupalia	NA
+xenarthra	-60	NA	cingulata,pilosa	NA
+tetrapodomorpha	-409	NA	tetrapoda,stegocephalia	NA
+stegocephalia	-375	NA	tiktaalik,elginerpeton,ichthyostega,acanthostega	NA
+temnospondyli	-330	NA	eryops,archegosauridae,lissamphibia	NA
+lissamphibia	-250	NA	anura,urodela,gymnophiona	NA
+lepospondyli	-339	NA	diplocaulus	NA
