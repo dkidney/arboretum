@@ -37,7 +37,7 @@ ui <- fluidPage(
 			# verbatimTextOutput("taxon_check")
 		),
 		column(
-			width = 9,
+			width = 6,
 			selectInput(
 				inputId = 'collapse',
 				label = 'collapse',
@@ -46,16 +46,31 @@ ui <- fluidPage(
 				# choices = '',
 				multiple = TRUE,
 				width = '100%'
+				# )
+				# verbatimTextOutput("collapse_check")
 			)
-			# verbatimTextOutput("collapse_check")
-			# ),
-			# column(
-			# 	width = 1,
-			# 	actionButton(
-			# 		inputId = 'expand',
-			# 		label = 'expand all'
-			# 	)
-			# )
+		),
+		column(
+			width = 1,
+			numericInput("height", "height", min = 100, max = 5000, value = 800, step=50)
+		),
+		column(
+			width = 1,
+			numericInput("width", "width", min = 100, max = 5000, value = 1500, step=50)
+		),
+		column(
+			width = 1,
+			actionButton(
+				inputId = 'expand_all',
+				label = 'expand all'
+			)
+		),
+		column(
+			width = 1,
+			actionButton(
+				inputId = 'collapse_default',
+				label = 'collapse default'
+			)
 		)
 	),
 	fluidRow(
@@ -72,89 +87,56 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
 
-	# tree_data = reactiveVal()
+	vals = reactiveValues()
 
-	vals = reactiveValues(
-		taxon_selected    = input_taxon_selected_default,
-		collapse_choices  = input_collapse_choices_default,
-		collapse_selected = input_collapse_selected_default,
-		df = NULL
-	)
+	collapse = function(how) {
+		stopifnot(how %in% c('input', 'default', 'none'))
 
-	# observeEvent(
-	# 	{input$expand},
-	# 	{vals$collapse = NULL}
-	# )
+		# load data and collapse taxa
+		df = arboretum:::load_tree_data()
+		df = arboretum:::subset_taxon(df, input$taxon)
+		collapsed = how %>% switch(
+			'input'   = input$collapse,
+			'default' = arboretum:::get_default_collapsed(df),
+			'none'    = character(0)
+		)
+		df <- arboretum:::collapse_taxa(df, collapsed)
+		uncollapsed = get_nodes(df, ignore_roots = TRUE)$taxon
 
-	# dummy <- eventReactive(
-	# observeEvent(
-	# 	{
-	# 		input$taxon
-	# 		input$collapse # didn't seem to react when this changed to NULL...
-	# 	},
-	observe(
-		{
+		# update vals
+		vals$collapse_selected = collapsed
+		vals$collapse_choices = c(collapsed, uncollapsed)
+		vals$taxon_selected = input$taxon
+		vals$tree_data = df
 
-			taxon_updated = !(length(input$taxon) == length(vals$taxon_selected) &&
-							  	input$taxon == vals$taxon_selected)
+		# update collapse selectInput
+		freezeReactiveValue(input, "collapse")
+		updateSelectInput(
+			inputId = 'collapse',
+			selected = vals$collapse_selected,
+			choices = vals$collapse_choices
+		)
+	}
 
-			collapse_updated = !(length(input$collapse) == length(vals$collapse_selected) &&
-								 	all(input$collapse %in% vals$collapse_selected))
+	observeEvent(input$expand_all, {
+		collapse('none')
+	})
 
-			# cat('\n')
-			# cat('input$taxon:', input$taxon, '\n')
-			# cat('vals$taxon_selected:', vals$taxon_selected, '\n')
-			# cat('taxon_updated: ', taxon_updated, '\n')
-			# cat('\n')
-			# cat('input$collapse:', input$collapse, '\n')
-			# cat('vals$collapse_selected:', vals$collapse_selected, '\n')
-			# cat('collapse_updated: ', collapse_updated, '\n')
-			# cat('\n')
-			# cat('vals$collapse_choices:', vals$collapse_choices)
+	observeEvent(input$collapse_default, {
+		collapse('default')
+	})
 
-			# vals$taxon_selected
-			# vals$collapse_selected
-			# vals$collapse_choices
-			# vals$tree_data
+	observeEvent(input$taxon, {
+		collapse('default')
+	})
 
-			# if (is.null(input$collapse)) {
-			# 	browser()
-			# } else if (is.na(input$collapse) || input$collapse == '') {
-			# 	browser()
-			# }
-
-			if (is.null(vals$tree_data) | taxon_updated | collapse_updated) {
-
-				# generate tree data
-				df = arboretum:::load_tree_data()
-				# arboretum:::tree_data_summary(df)
-				df = arboretum:::subset_taxon(df, input$taxon)
-				collapsed = input$collapse
-				if (taxon_updated) {
-					collapsed = arboretum:::get_default_collapsed(df)
-				}
-				df <- arboretum:::collapse_taxa(df, collapsed)
-				# arboretum:::tree_data_summary(df)
-				if (taxon_updated) {
-					vals$taxon_selected = input$taxon
-				}
-
-				# update select input for collapse
-				if (taxon_updated | collapse_updated) {
-					uncollapsed = get_nodes(df, ignore_roots = TRUE)$taxon
-					vals$collapse_selected = collapsed
-					vals$collapse_choices = c(collapsed, uncollapsed)
-					freezeReactiveValue(input, "collapse")
-					updateSelectInput(
-						inputId = 'collapse',
-						selected = vals$collapse_selected,
-						choices = vals$collapse_choices
-					)
-				}
-
-				vals$tree_data = df
-			}
-		})
+	observeEvent(input$collapse, {
+		collapse_updated = !(length(input$collapse) == length(vals$collapse_selected) &&
+							 	all(input$collapse %in% vals$collapse_selected))
+		if(collapse_updated) {
+			collapse('input')
+		}
+	})
 
 	# output$taxon_check <- renderText(input$taxon)
 	#
@@ -169,153 +151,11 @@ server <- function(input, output, session) {
 				max_tips = 100
 			)
 		},
-		width = 1500,
-		height = 850,
-		res = 96
+		width = function() input$width,
+		height = function() input$height,
+		res = 125
 	)
 
-
-
-	# observe(
-	# 	{
-	# 		df = arboretum:::load_tree_data()
-	# 		df = arboretum:::subset_taxon(df, input$taxon)
-	# 		if (!is.null(input$collapse)) {
-	# 			df <- arboretum:::collapse_taxa(df, input$collapse)
-	# 		}
-	# 		arboretum:::tree_data_summary(df)
-	# 		tree_data(df)
-	#
-	# 		freezeReactiveValue(input, "collapse")
-	# 		updateSelectInput(
-	# 			inputId = 'collapse',
-	# 			selected = collapse_selected,
-	# 			choices = collapse_choices
-	# 		)
-	# 	}
-	# )
-
-	# observeEvent(
-	# 	input$collapse,
-	# 	{
-	#
-	# 		df = isolate(tree_data())
-	# 		# collapsable = arboretum:::get_collapsable_taxa(df, isolate(input$taxon))
-	# 		# collapsed = arboretum:::get_default_collapsed(df, collapsable)
-	# 		df <- arboretum:::collapse_taxa(df, input$collapse)
-	# 		arboretum:::tree_data_summary(df)
-	# 		uncollapsed = get_nodes(df, ignore_roots = TRUE)$taxon
-	# 		collapse_selected = collapsed
-	# 		collapse_choices = c(collapsed, uncollapsed)
-	# 		tree_data(df)
-	#
-	# 		freezeReactiveValue(input, "collapse")
-	# 		updateSelectInput(
-	# 			inputId = 'collapse',
-	# 			selected = collapse_selected,
-	# 			choices = collapse_choices
-	# 		)
-	# 	})
-
-	# 	updateSelectInput(
-	# 		inputId = 'collapse',
-	# 		choices = collapse_choices,
-	# 		selected = collapse_selected
-	# 	)
-
-	# # observe({
-	# tree_data = eventReactive({
-	# 	input$taxon
-	# 	input$collapse
-	# },
-	# {
-	# 	print('input$taxon has been updated')
-	# 	print('input$taxon:')
-	# 	print(isolate(input$taxon))
-	# 	print('input$collapse:')
-	# 	print(isolate(input$collapse))
-	#
-	# 	taxon <- input$taxon
-	# 	df <- arboretum:::load_tree_data()
-	# 	df <- arboretum:::subset_taxon(df, taxon)
-	#
-	# 	if (is.null(isolate(input$collapse))) {
-	#
-	# 		print('using default collapse')
-	# 		collapse_choices <- arboretum:::get_collapsable_taxa(df, taxon)
-	# 		collapse_selected <- arboretum:::get_default_collapsed(df, collapse_choices)
-	# 		df <- arboretum:::collapse_taxa(df, collapse_selected)
-	#
-	# 	} else {
-	#
-	# 		print('using selected collapse')
-	# 		# e.g. if saurpodomorpha is collapsed, then sauropoda shouldn't be in choices
-	# 		df <- arboretum:::collapse_taxa(df, isolate(input$collapse))
-	# 		collapse_choices <- get_nodes(df)$taxon
-	# 		collapse_selected = isolate(input$collapse)
-	#
-	# 	}
-	# 	# freezeReactiveValue(input, "collapse")
-	# 	print('input$collapse choices:')
-	# 	print(collapse_choices)
-	# 	print('input$collapse selected:')
-	# 	print(collapse_selected)
-	# 	print('updating input$collapse')
-	# 	updateSelectInput(
-	# 		inputId = 'collapse',
-	# 		choices = collapse_choices,
-	# 		selected = collapse_selected
-	# 	)
-	# 	print(head(df))
-	# 	return(df)
-	# 	# print(isolate(input$taxon))
-	# 	# print(isolate(input$collapse))
-	# })
-	#
-	# # observeEvent(input$collapse, {
-	# # 	print('input$collapse has been updated')
-	# #
-	# # 	print(isolate(input$taxon))
-	# # 	print(isolate(input$collapse))
-	# # 	taxon <- input$taxon
-	# # 	df <- arboretum:::load_tree_data()
-	# # 	df <- arboretum:::subset_taxon(df, taxon)
-	# # 	df <- arboretum:::collapse_taxa(df, input$collapse)
-	# # 	collapse_choices <- get_nodes(df)$taxon
-	# # 	# freezeReactiveValue(input, "collapse")
-	# # 	print('updating input$collapse choices')
-	# # 	updateSelectInput(
-	# # 		inputId = 'collapse',
-	# # 		choices = collapse_choices,
-	# # 		selected = isolate(input$collapse)
-	# # 	)
-	# # 	print(isolate(input$taxon))
-	# # 	print(isolate(input$collapse))
-	# # })
-	#
-	# output$tree <- renderPlot(
-	# 	{
-	# 		req(tree_data())
-	# 		print('rendering plot')
-	# 		print('a')
-	# 		print(isolate(nrow(tree_data())))
-	# 		print('b')
-	# 		arboretum:::plot_tree_data(
-	# 			tree_data(),
-	# 			max_tips = 100
-	# 		)
-	# 		print('c')
-	# 		# tree(
-	# 		# 	taxon=req(input$taxon),
-	# 		# 	collapse=input$collapse,
-	# 		# 	max_tips = 100
-	# 		# )
-	# 	},
-	# 	width = 1500,
-	# 	height = 850,
-	# 	res = 96
-	# )
-	#
 }
 
 shinyApp(ui, server)
