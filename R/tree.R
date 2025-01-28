@@ -1,6 +1,7 @@
 #' plot tree data
 #' @param taxon TODO
 #' @param collapse TODO
+#' @param max_tips TODO
 #' @export
 #' @examples
 #' library(arboretum)
@@ -22,41 +23,85 @@
 #'                                 'ceratopsia'))
 #' tree('theropoda', collapse=c('avialae'))
 
-tree = function(taxon=NULL, collapse=NULL) {
-	if (is.null(collapse)) {
-		collapse = c(
-			'archosauromorpha',
-			'lepidosauromorpha',
-			'parareptilia',
-			'synapsida',
-			'temnospondyli'
-		)
+# todo: last_common_ancestor(df, taxa)
+
+tree = function(taxon=NULL, collapse=NULL, max_tips=100) {
+
+	df = prepare_tree_data(taxon=taxon, collapse=collapse)
+
+	plot_tree_data(df, max_tips=max_tips)
+
+}
+
+prepare_tree_data = function(taxon=NULL, collapse=NULL) {
+	df = load_tree_data()
+	# if (is.null(taxon)) {
+	# 	taxon = 'tetrapodomorpha'
+	# }
+	if (!is.null(taxon)) {
+		df = subset_taxon(df, taxon)
 	}
+	if (is.null(collapse)) {
+		# collapsable_taxa = get_collapsable_taxa(df, taxon)
+		# collapse = get_default_collapsed(df, collapsable_taxa)
+		collapse = get_default_collapsed(df)
+	}
+	df = collapse_taxa(df, collapse)
+	# df = check_n_tips(df, max_tips)
+	# df = arrange_tree(df)
+	df
+}
 
-	df = load_tree_data() %>%
-		subset_taxon(taxon) %>%
-		collapse_taxa(collapse) %>%
-		arrange_tree()
+# get_collapsable_taxa = function(df, taxon) {
+# 	taxa = get_nodes(df)$taxon
+# 	# if (is.null(taxon)) {
+# 		taxa = taxa[taxa != get_roots(df)$taxon]
+# 	# } else {
+# 	# 	taxa = taxa[taxa != taxon]
+# 	# }
+# 	taxa
+# }
 
-	relations = dplyr::inner_join(
-		df %>%
-			get_nodes() %>%
-			dplyr::select(.data$taxon,
-						  x=.data$from,
-						  .data$y,
-						  .data$children) %>%
-			# dplyr::select(dplyr::one_of('taxon', 'from', 'y', 'children')) %>%
-			# dplyr::rename(x=.data$from) %>%
-			dplyr::mutate(children = .data$children %>% purrr::map(~dplyr::tibble(child=.x))) %>%
-			tidyr::unnest(.data$children),
-		df %>%
-			dplyr::select(child=.data$taxon,
-						  xend=.data$from,
-						  yend=.data$y),
-		by='child'
-	) %>%
-		dplyr::arrange(.data$taxon,
-					   .data$yend)
+# get_default_collapsed = function(df, collapsable_taxa) {
+	# taxa = collapsable_taxa
+
+get_default_collapsed = function(df) {
+	taxa = get_nodes(df)$taxon
+	taxa = taxa[taxa != get_roots(df)$taxon]
+	taxa = taxa[stringr::str_detect(taxa, '(omorpha|iformes|oidea|ae)$')]
+	if (length(taxa) == 0) return(character(0))
+	nested = rep(FALSE, length(taxa))
+	for (i in seq_along(taxa)) { # i=1
+		if (nested[i]) next
+		descendants = get_descendants_taxon(df, taxa[i])$taxon
+		nested[taxa %in% descendants] = TRUE
+	}
+	taxa = sort(taxa[!nested])
+	# message('collapsing ', length(taxa), ' taxa by default:\n\t',
+	# 		stringr::str_c(taxa, collapse='\n\t'))
+	taxa
+	# selected_taxa = taxa
+	# list(
+	# 	choices = collapsable_taxa,
+	# 	selected = selected_taxa
+	# )
+}
+
+plot_tree_data = function(df, max_tips=100) {
+
+	# if (!is.null(df$collapsed)) {
+	# 	df = df %>% dplyr::filter(.data$collapsed)
+	# }
+
+	# message('tree data used for plotting:')
+	tree_data_summary(df)
+
+	# df = check_n_tips(df, max_tips)
+	if(nrow(get_tips(df)) > max_tips) {
+		warning('number of tips exceeds max_tips (', max_tips, ')')
+		return(NULL)
+	}
+	df = arrange_tree(df)
 
 	plt = df %>%
 		ggplot2::ggplot(ggplot2::aes(x=.data$from,
@@ -77,12 +122,14 @@ tree = function(taxon=NULL, collapse=NULL) {
 
 	y_max = max(df$y, na.rm = TRUE)
 	y_min = min(df$y, na.rm = TRUE)
+
 	x_max = 0
 	x_min = min(geotime$from)
 
 	geotime = split_geotime_by_timescale(geotime)
 
 	h = diff(range(df$y))
+	if (h == 0) h = 1
 	one_pc = h / 100
 
 	y_max_main = y_max + 0.5
@@ -105,13 +152,15 @@ tree = function(taxon=NULL, collapse=NULL) {
 
 	x_breaks = rev(seq(0, x_min, -25))
 
+	y_expand_bottom = abs(y_min_era - y_min) / h
+	y_expand_top = (y_max_header - y_max) / h
+
 	plt = plt +
 		ggplot2::scale_y_continuous(
 			# breaks = 0:max(df$y),
 			# labels = 0:sum(df$is_tip),
 			# expand = c(bottom, ?, top, ?)
-			expand = c(abs(y_min_era - y_min) / h, 0,
-					   (y_max_header - y_max) / h, 0),
+			expand = c(y_expand_bottom, 0, y_expand_top, 0),
 		) +
 		ggplot2::scale_x_continuous(
 			breaks = x_breaks,
@@ -297,16 +346,23 @@ tree = function(taxon=NULL, collapse=NULL) {
 		)
 
 
-	# tips, nodes and relations ------------------------------------------------
+	# relationships ------------------------------------------------------------
+
+	parent_child_relationships = get_parent_child_relationships(df)
+	if (!is.null(parent_child_relationships)) {
+		plt = plt +
+			geom_sigmoid(
+				ggplot2::aes(x=.data$x, y=.data$y, xend=.data$xend, yend=.data$yend),
+				data = parent_child_relationships,
+				col = 'grey50'
+			)
+	}
+
+	# tips and nodes -----------------------------------------------------------
 
 	pointsize = 1.0
 	textsize = 2.5
 	plt = plt +
-		geom_sigmoid(
-			ggplot2::aes(x=.data$x, y=.data$y, xend=.data$xend, yend=.data$yend),
-			data = relations,
-			col = 'grey50'
-		) +
 		ggplot2::geom_segment(
 			ggplot2::aes(xend=.data$to, yend=.data$y),
 			data=df %>% get_tips()
@@ -352,6 +408,39 @@ tree = function(taxon=NULL, collapse=NULL) {
 	return(plt)
 }
 
+check_n_tips = function(df, max_tips=NULL) {
+	n_tips = nrow(get_tips(df))
+	# message('tree has ', n_tips, ' tips')
+	if (is.null(max_tips)) return(df)
+	stopifnot(is.numeric(max_tips), length(max_tips) == 1)
+	max_tips = as.integer(max_tips)
+	stopifnot(!is.na(max_tips), max_tips > 0)
+	if(n_tips > max_tips) {
+		stop('number of tips exceeds max_tips (', max_tips, ')')
+	}
+	invisible(df)
+}
+
+get_parent_child_relationships = function(df) {
+	nodes = get_nodes(df)
+	if (nrow(nodes) == 0) return(NULL)
+	dplyr::inner_join(
+		df %>%
+			dplyr::select(.data$taxon,
+						  x=.data$from,
+						  .data$y,
+						  .data$children) %>%
+			dplyr::mutate(children = .data$children %>% purrr::map(~dplyr::tibble(child=.x))) %>%
+			tidyr::unnest(.data$children),
+		df %>%
+			dplyr::select(child=.data$taxon,
+						  xend=.data$from,
+						  yend=.data$y),
+		by='child'
+	) %>%
+		dplyr::arrange(.data$taxon,
+					   .data$yend)
+}
 
 highlight_taxon = function(plt, taxon, col=1, alpha=0.25) {
 	temp = plt$data %>% subset_taxon(taxon)

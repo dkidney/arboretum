@@ -28,7 +28,7 @@
 # df3 %>% arrange_tree()
 #
 load_tree_data = function() {
-	readr::read_tsv(
+	df = readr::read_tsv(
 		system.file("extdata", "tree_data.tsv", package="arboretum"),
 		col_types = readr::cols(
 			from = readr::col_double(),
@@ -42,21 +42,21 @@ load_tree_data = function() {
 		dplyr::mutate(asterisk = .data$taxon %>% stringr::str_detect('\\*$')) %>%
 		dplyr::mutate(taxon = .data$taxon %>% stringr::str_remove('\\*$')) %>%
 		dplyr::arrange(.data$taxon) %>%
-		check_tree_data() %>%
-		identity()
+		check_tree_data()
+	# message('\nraw tree data:')
+	# tree_data_summary(df)
+	df
 }
 
-check_taxon = function(df, taxon, warn=FALSE) {
+check_valid_taxon = function(df, taxon, warn=FALSE) {
 	stopifnot(is.character(taxon), length(taxon) == 1)
-	if(!taxon %in% df$taxon) {
-		msg = stringr::str_c("invalid taxon: '", taxon, "'")
-		if (warn) {
-			warning(msg)
-		} else {
-			stop(msg)
-		}
+	if(taxon %in% df$taxon) return(invisible(df))
+	msg = stringr::str_c("invalid taxon: '", taxon, "'")
+	if (warn) {
+		warning(msg)
+	} else {
+		stop(msg)
 	}
-	invisible(df)
 }
 
 get_roots = function(df) {
@@ -67,18 +67,36 @@ get_tips =function(df) {
 	df[purrr::map_int(df$children, length) == 0, ]
 }
 
-get_nodes =function(df) {
+get_nodes =function(df, ignore_roots=FALSE) {
+	if (ignore_roots) {
+		roots = get_roots(df)
+		df = df[!df$taxon %in% roots$taxon,]
+	}
 	df[purrr::map_int(df$children, length) > 0, ]
 }
 
 get_children = function(df, taxon) {
-	check_taxon(df, taxon)
+	# check_valid_taxon(df, taxon)
 	children =  df$children[df$taxon == taxon][[1]]
 	df[df$taxon %in% children, ]
 }
 
+get_descendants_taxon = function(df, taxon) {
+	# check_valid_taxon(df, taxon)
+	df %>%
+		subset_taxon(taxon) %>%
+		dplyr::filter(.data$taxon != !!taxon)
+}
+
+get_descendants_taxa = function(df, taxa) {
+	# todo: make this more efficient
+	taxa %>%
+		purrr::map_df(function(taxon) get_descendants_taxon(df, taxon)) %>%
+		dplyr::distinct()
+}
+
 get_siblings = function(df, taxon) {
-	check_taxon(df, taxon)
+	# check_valid_taxon(df, taxon)
 	parent = get_parent(df, taxon)
 	if (nrow(parent) == 0) {
 		return(get_roots(df))
@@ -87,16 +105,21 @@ get_siblings = function(df, taxon) {
 }
 
 get_parent = function(df, taxon) {
-	check_taxon(df, taxon)
+	# check_valid_taxon(df, taxon)
 	i = df$children %>% purrr::map_lgl(~taxon %in% .x)
 	stopifnot(sum(i) <= 1)
 	df[i, ]
 }
 
 is_root = function(df, taxon) {
-
-	check_taxon(df, taxon)
+	# check_valid_taxon(df, taxon)
 	nrow(get_parent(df, taxon)) == 0
+}
+
+is_sole_root = function(df, taxon) {
+	# check_valid_taxon(df, taxon)
+	roots = get_roots(df)
+	return(nrow(roots) == 1 && taxon == roots$taxon[1])
 }
 
 # Subset taxon
@@ -107,8 +130,11 @@ is_root = function(df, taxon) {
 # @param taxon taxonomic name (string)
 # @return A tibble
 # @export
-subset_taxon = function(df, taxon) {
+subset_taxon = function(df, taxon=NULL) {
 	if (is.null(taxon)) return(df)
+	check_valid_taxon(df, taxon)
+	# taxon = stringr::str_to_lower(taxon)
+	if (is_sole_root(df, taxon)) return(df)
 	taxa = c()
 	temp_taxa = c(taxon)
 	while (length(temp_taxa) > 0) {
@@ -158,33 +184,58 @@ check_tree_data = function(df) {
 	}
 
 	# check roots
-	roots = get_roots(df)
-	if (nrow(roots) > 1) {
-		warning('multiple roots: ', stringr::str_c(sort(roots$taxon), collapse = '\n'))
-	}
+	# roots = get_roots(df)
+	# if (nrow(roots) > 1) {
+	# 	warning('multiple roots: ', stringr::str_c(sort(roots$taxon), collapse = '\n'))
+	# }
 
 	invisible(df)
 
 }
 
+tree_data_summary = function(df) {
+	n_rows = nrow(df)
+	roots = get_roots(df)
+	n_roots = nrow(roots)
+	n_nodes = nrow(get_nodes(df, ignore_roots = TRUE))
+	n_tips = nrow(get_tips(df))
+	stopifnot((n_roots + n_nodes + n_tips) == nrow(df))
+	message('tree data summary:')
+	message('- n rows : ', n_rows)
+	message('- n roots: ', n_roots, ' (', paste(roots$taxon, collapse=','), ')')
+	message('- n nodes: ', n_nodes)
+	message('- n tips : ', n_tips)
+}
+
 collapse_taxon = function(df, taxon) {
-	if (is.null(taxon)) return(df)
-	check_taxon(df, taxon, warn=TRUE)
-	sub = subset_taxon(df, taxon)
-	taxa_to_drop = sub$taxon[sub$taxon != taxon]
-	df = df[!df$taxon %in% taxa_to_drop, ]
+	if (is.null(taxon) | is.na(taxon) | taxon == '') return(df)
+	if (!taxon %in% df$taxon) return(df)
+	# check_valid_taxon(df, taxon, warn=TRUE)
+
+	# sub = subset_taxon(df, taxon)
+	# taxa_to_drop = sub$taxon[sub$taxon != taxon]
+
+	# remove taxon descendants
+	descendants = get_descendants_taxon(df, taxon)
+	df = df[!df$taxon %in% descendants$taxon, ]
+
+	# update row for collapsed taxon
 	i = df$taxon == taxon
-	df$to[i] = max(c(sub$to, df$to[i]), na.rm=TRUE)
+	df$to[i] = max(c(descendants$to, df$to[i]), na.rm=TRUE)
 	df$children[i] = list(character(0))
 	return(df)
 }
 
 collapse_taxa = function(df, taxa) {
+	# if (is.null(taxa) | is.na(taxa) | taxa == '') return(df)
 	if (is.null(taxa)) return(df)
-	taxa = taxa[taxa %in% df$taxon]
-	for (taxon in taxa) {
-		df = collapse_taxon(df, taxon)
-	}
+	taxa = taxa[taxa %in% get_nodes(df)$taxon]
+	if (length(taxa) == 0) return(df)
+	taxa = taxa[!taxa %in% get_roots(df)$taxon]
+	if (length(taxa) == 0) return(df)
+	message('collapsing ', length(taxa), ' taxa:\n- ',
+			stringr::str_c(taxa, collapse='\n- '))
+	for (taxon in taxa) df = collapse_taxon(df, taxon)
 	return(df)
 }
 
