@@ -2,49 +2,50 @@
 #' @param taxon TODO
 #' @param collapse TODO
 #' @param max_tips TODO
+#' @param ... TODO
 #' @export
 #' @examples
 #' library(arboretum)
 #' tree()
-#' tree('amniota', collapse=c('archosauromorpha',
-#'                            'therapsida',
-#'                            'lepidosauromorpha'))
-#' tree('therapsida', collapse='mammalia')
-#' tree('mammalia')
-#' tree('archosauromorpha', collapse=c('dinosauria',
-#'                                     'pterosauria',
-#'                                     'pseudosuchia',
-#'                                     'sauropterygia'))
-#' tree('pseudosuchia')
-#' tree('dinosauria', collapse = c('sauropoda',
-#'                                 'ornithopoda',
-#'                                 'theropoda',
-#'                                 'ankylosauria',
-#'                                 'ceratopsia'))
-#' tree('theropoda', collapse=c('avialae'))
+#' tree('dinosauria')
+#' tree('dinosauria',
+#' 	 collapse = c('sauropodomorpha',
+#' 	 			 'ornithopoda',
+#' 	 			 'theropoda',
+#' 	 			 'ankylosauria',
+#' 	 			 'stegosauria',
+#' 	 			 'pachycephalosauria',
+#' 	 			 'ceratopsia'))
+#' tree('ornithischia', collapse='none')
+#' tree('sauropoda', collapse='none')
+#' tree('tetanurae', collapse='avialae')
+#' tree('sauropterygia', collapse='none')
+#' tree('synapsida')
 
-# todo: last_common_ancestor(df, taxa)
-
-tree = function(taxon=NULL, collapse=NULL, max_tips=100) {
+tree = function(taxon=NULL, collapse=NULL, max_tips=300, ...) {
 
 	df = prepare_tree_data(taxon=taxon, collapse=collapse)
 
-	plot_tree_data(df, max_tips=max_tips)
+	plot_tree_data(df, max_tips=max_tips, ...)
 
 }
 
-prepare_tree_data = function(taxon=NULL, collapse=NULL) {
+prepare_tree_data = function(taxon=NULL, collapse='none') {
 	df = load_tree_data()
 	# if (is.null(taxon)) {
 	# 	taxon = 'tetrapodomorpha'
 	# }
 	if (!is.null(taxon)) {
-		df = subset_taxon(df, taxon)
+		df = subset_taxon(df, tolower(taxon))
 	}
 	if (is.null(collapse)) {
 		# collapsable_taxa = get_collapsable_taxa(df, taxon)
 		# collapse = get_default_collapsed(df, collapsable_taxa)
 		collapse = get_default_collapsed(df)
+	} else {
+		if (length(collapse) == 1) {
+			if (collapse == 'none') return(df)
+		}
 	}
 	df = collapse_taxa(df, collapse)
 	# df = check_n_tips(df, max_tips)
@@ -63,12 +64,12 @@ prepare_tree_data = function(taxon=NULL, collapse=NULL) {
 # }
 
 # get_default_collapsed = function(df, collapsable_taxa) {
-	# taxa = collapsable_taxa
+# taxa = collapsable_taxa
 
 get_default_collapsed = function(df) {
-	taxa = get_nodes(df)$taxon
-	taxa = taxa[taxa != get_roots(df)$taxon]
-	taxa = taxa[stringr::str_detect(taxa, '(omorpha|iformes|oidea|ae)$')]
+	taxa = get_nodes(df, ignore_roots=TRUE)$taxon
+	# taxa = taxa[taxa != get_roots(df)$taxon]
+	taxa = taxa[stringr::str_detect(taxa, '(morpha|formes|oidea|ae)$')]
 	if (length(taxa) == 0) return(character(0))
 	nested = rep(FALSE, length(taxa))
 	for (i in seq_along(taxa)) { # i=1
@@ -87,14 +88,14 @@ get_default_collapsed = function(df) {
 	# )
 }
 
-plot_tree_data = function(df, max_tips=100) {
+plot_tree_data = function(df, max_tips=100, textsize=3) {
 
 	# if (!is.null(df$collapsed)) {
 	# 	df = df %>% dplyr::filter(.data$collapsed)
 	# }
 
 	# message('tree data used for plotting:')
-	tree_data_summary(df)
+	message(tree_data_summary(df))
 
 	# df = check_n_tips(df, max_tips)
 	if(nrow(get_tips(df)) > max_tips) {
@@ -150,7 +151,7 @@ plot_tree_data = function(df, max_tips=100) {
 	y_max_era    = y_min_period
 	y_min_era    = y_max_era - one_pc * 4
 
-	x_breaks = rev(seq(0, x_min, -25))
+	x_breaks = rev(seq(0, x_min, -20))
 
 	y_expand_bottom = abs(y_min_era - y_min) / h
 	y_expand_top = (y_max_header - y_max) / h
@@ -174,10 +175,10 @@ plot_tree_data = function(df, max_tips=100) {
 	period_linewidth = 0.3
 	era_linewidth    = 0.4
 
-	age_textsize    = 2
-	epoch_textsize  = 2.5
-	period_textsize = 3.5
-	era_textsize    = 4
+	age_textsize    = textsize - 0.5
+	epoch_textsize  = textsize
+	period_textsize = textsize + 0.5
+	era_textsize    = textsize + 1.0
 
 	age_linecolour    = 'grey60'
 	epoch_linecolour  = 'grey50'
@@ -361,7 +362,6 @@ plot_tree_data = function(df, max_tips=100) {
 	# tips and nodes -----------------------------------------------------------
 
 	pointsize = 1.0
-	textsize = 2.5
 	plt = plt +
 		ggplot2::geom_segment(
 			ggplot2::aes(xend=.data$to, yend=.data$y),
@@ -376,6 +376,7 @@ plot_tree_data = function(df, max_tips=100) {
 		ggplot2::geom_point(
 			data=df %>% get_tips(),
 			size = pointsize,
+			col=get_tips(df)$asterisk %>% dplyr::if_else('red', 'black'),
 		) +
 		ggplot2::geom_point(
 			ggplot2::aes(x=.data$to),
@@ -383,8 +384,10 @@ plot_tree_data = function(df, max_tips=100) {
 			size = pointsize,
 		) +
 		ggplot2::geom_point(
+			# ggplot2::aes(col=asterisk),
 			data=df %>% get_nodes(),
 			size = pointsize,
+			col=get_nodes(df)$asterisk %>% dplyr::if_else('red', 'black'),
 		) +
 		ggplot2::geom_text(
 			ggplot2::aes(label=.data$taxon),

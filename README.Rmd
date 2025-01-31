@@ -9,7 +9,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  message = FALSE
 )
 ```
 
@@ -31,31 +32,66 @@ devtools::install_github("dkidney/arboretum")
 
 ## Examples
 
-Plot the default tree.
+Load the package (and check the version)
 
-```{r fig.asp = 0.6, fig.width = 10}
+```{r}
 library(arboretum)
-tree() # default settings
+packageVersion("arboretum")
 ```
 
-Create customised trees by selecting a specific taxon and/or collapsing specific taxa.
-
-```{r fig.asp = 0.6, fig.width = 10}
-tree(taxon='amniota', 
-	 collapse=c('archosauromorpha', 'therapsida', 'lepidosauromorpha'))
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	fig.asp = 0.6, 
+	fig.width = 15, 
+	out.width = "100%"
+)
 ```
 
-```{r fig.asp = 0.6, fig.width = 10}
-tree(taxon='archosauromorpha', 
-	 collapse=c('dinosauria', 'pterosauria', 'pseudosuchia', 'sauropterygia'))
+Plot the default tree. By default, any branch node ending in '-ae', '-morpha' or '-formes' will be collapsed.
+
+```{r}
+tree()
 ```
 
+Use the `taxon` argument to create a tree for a specific taxon, using the default rule for collapsing branches.
 
-```{r fig.asp = 0.6, fig.width = 10}
-tree('dinosauria', 
-	 collapse = c('sauropoda', 'ornithopoda', 'theropoda', 'ankylosauria', 'ceratopsia'))
+```{r}
+ tree(taxon = 'dinosauria')
 ```
 
-```{r fig.asp = 0.6, fig.width = 10}
-tree(taxon='tetanurae', collapse=c('avialae'))
+Use the `collapse` argument to choose which branches in the tree are collapsed.
+
+```{r}
+tree(taxon = 'dinosauria',
+	 collapse = c('sauropodomorpha',
+	 			 'ornithopoda',
+	 			 'theropoda',
+	 			 'ankylosauria',
+	 			 'stegosauria',
+	 			 'pachycephalosauria',
+	 			 'ceratopsia'))
+```
+
+Use `collapse='none'` to see all available branches.
+
+```{r}
+tree(taxon='sauropoda', collapse='none')
+```
+
+Other example trees:
+
+```{r}
+tree('tetanurae', collapse='avialae')
+```
+
+```{r}
+tree('sauropterygia', collapse='none')
+```
+
+```{r}
+tree('synapsida')
+```
+
+```{r}
+tree('pseudosuchia', collapse='none')
 ```

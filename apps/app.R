@@ -1,12 +1,15 @@
 library(shiny)
 library(arboretum)
 
-# do you really need to track input collapse choices?
+# if collapse selections are all manually deleted the plot doesn't change
 
 options(shiny.reactlog = TRUE)
 
 cat('pre-lauch code start ------------------------------------------------------\n')
-taxon = 'archosauria'
+taxon = 'sauropoda'
+# taxon = 'dinosauria'
+# taxon = 'tetrapodomorpha'
+# taxon = 'archosauria'
 # taxon = 'pterosauria'
 df = arboretum:::load_tree_data()
 arboretum:::tree_data_summary(df)
@@ -63,13 +66,16 @@ ui <- fluidPage(
 			actionButton(
 				inputId = 'expand_all',
 				label = 'expand all'
+			),
+			actionButton(
+				inputId = 'collapse_default',
+				label = 'collapse default'
 			)
 		),
 		column(
 			width = 1,
-			actionButton(
-				inputId = 'collapse_default',
-				label = 'collapse default'
+			verbatimTextOutput(
+				outputId = 'summary'
 			)
 		)
 	),
@@ -101,7 +107,7 @@ server <- function(input, output, session) {
 			'none'    = character(0)
 		)
 		df <- arboretum:::collapse_taxa(df, collapsed)
-		uncollapsed = get_nodes(df, ignore_roots = TRUE)$taxon
+		uncollapsed = arboretum:::get_nodes(df, ignore_roots = TRUE)$taxon
 
 		# update vals
 		vals$collapse_selected = collapsed
@@ -148,13 +154,26 @@ server <- function(input, output, session) {
 		{
 			arboretum:::plot_tree_data(
 				req(vals$tree_data),
-				max_tips = 100
+				max_tips = 250
 			)
 		},
 		width = function() input$width,
 		height = function() input$height,
-		res = 125
+		res = 115
 	)
+
+	output$summary <- renderText(
+		paste('n_tips:',  nrow(arboretum:::get_tips(req(vals$tree_data))))
+		# arboretum:::tree_data_summary(req(vals$tree_data))
+		# paste(
+		# 	paste('n_roots:', nrow(arboretum:::get_roots(req(vals$tree_data)))),
+		# 	paste('n_nodes:', nrow(arboretum:::get_nodes(req(vals$tree_data), ignore_roots=TRUE))),
+		# 	paste('n_tips :',  nrow(arboretum:::get_tips(req(vals$tree_data)))),
+		# 	sep = '\n'
+		# )
+	)
+
+
 
 }
 

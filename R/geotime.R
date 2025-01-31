@@ -128,6 +128,7 @@ load_events = function() {
 		'K-Pg'  , 66     , 'red',
 		'Tr-J'  , 201.3  , 'red',
 		'P-Tr'  , 251.902, 'red',
+		'CRC'   , 305    , 'blue',
 		'Late D', 371.1  , 'red',
 		'O-S'   , 445    , 'red',
 	) %>%

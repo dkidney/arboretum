@@ -20,41 +20,78 @@ devtools::install_github("dkidney/arboretum")
 
 ## Examples
 
-Plot the default tree.
+Load the package (and check the version)
 
 ``` r
 library(arboretum)
-tree() # default settings
+packageVersion("arboretum")
+#> [1] '0.0.0.9000'
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
-
-Create customised trees by selecting a specific taxon and/or collapsing
-specific taxa.
+Plot the default tree. By default, any branch node ending in ‘-ae’,
+‘-morpha’ or ‘-formes’ will be collapsed.
 
 ``` r
-tree(taxon='amniota', 
-     collapse=c('archosauromorpha', 'therapsida', 'lepidosauromorpha'))
+tree()
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
+Use the `taxon` argument to create a tree for a specific taxon, using
+the default rule for collapsing branches.
+
 ``` r
-tree(taxon='archosauromorpha', 
-     collapse=c('dinosauria', 'pterosauria', 'pseudosuchia', 'sauropterygia'))
+ tree(taxon = 'dinosauria')
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
+Use the `collapse` argument to choose which branches in the tree are
+collapsed.
+
 ``` r
-tree('dinosauria', 
-     collapse = c('sauropoda', 'ornithopoda', 'theropoda', 'ankylosauria', 'ceratopsia'))
+tree(taxon = 'dinosauria',
+     collapse = c('sauropodomorpha',
+                 'ornithopoda',
+                 'theropoda',
+                 'ankylosauria',
+                 'stegosauria',
+                 'pachycephalosauria',
+                 'ceratopsia'))
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
+Use `collapse='none'` to see all available branches.
+
 ``` r
-tree(taxon='tetanurae', collapse=c('avialae'))
+tree(taxon='sauropoda', collapse='none')
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
+Other example trees:
+
+``` r
+tree('tetanurae', collapse='avialae')
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+``` r
+tree('sauropterygia', collapse='none')
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+``` r
+tree('synapsida')
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+
+``` r
+tree('pseudosuchia', collapse='none')
+```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />

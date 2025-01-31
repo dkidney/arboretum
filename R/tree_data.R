@@ -63,7 +63,11 @@ get_roots = function(df) {
 	df[!df$taxon %in% unlist(df$children), ]
 }
 
-get_tips =function(df) {
+get_tips =function(df, ignore_roots=FALSE) {
+	if (ignore_roots) {
+		roots = get_roots(df)
+		df = df[!df$taxon %in% roots$taxon,]
+	}
 	df[purrr::map_int(df$children, length) == 0, ]
 }
 
@@ -151,7 +155,7 @@ check_tree_data = function(df) {
 	errors = df$taxon %>% table
 	errors = errors[errors > 1]
 	if (length(errors) > 0) {
-		stop('non-unique taxa: ', names(errors))
+		stop('non-unique taxa: ', paste(names(errors), collapse=', '))
 	}
 
 	children = df$children %>% unlist #%>% purrr::discard(is.na)
@@ -198,13 +202,21 @@ tree_data_summary = function(df) {
 	roots = get_roots(df)
 	n_roots = nrow(roots)
 	n_nodes = nrow(get_nodes(df, ignore_roots = TRUE))
-	n_tips = nrow(get_tips(df))
+	n_tips = nrow(get_tips(df, ignore_roots = TRUE))
 	stopifnot((n_roots + n_nodes + n_tips) == nrow(df))
-	message('tree data summary:')
-	message('- n rows : ', n_rows)
-	message('- n roots: ', n_roots, ' (', paste(roots$taxon, collapse=','), ')')
-	message('- n nodes: ', n_nodes)
-	message('- n tips : ', n_tips)
+	paste(
+		'tree data summary:',
+		paste0('- n rows : ', n_rows),
+		paste0('- n roots: ', n_roots, ' (', paste(roots$taxon, collapse=','), ')'),
+		paste0('- n nodes: ', n_nodes),
+		paste0('- n tips : ', n_tips),
+		sep = '\n'
+	)
+	# message('tree data summary:')
+	# message('- n rows : ', n_rows)
+	# message('- n roots: ', n_roots, ' (', paste(roots$taxon, collapse=','), ')')
+	# message('- n nodes: ', n_nodes)
+	# message('- n tips : ', n_tips)
 }
 
 collapse_taxon = function(df, taxon) {
@@ -233,15 +245,11 @@ collapse_taxa = function(df, taxa) {
 	if (length(taxa) == 0) return(df)
 	taxa = taxa[!taxa %in% get_roots(df)$taxon]
 	if (length(taxa) == 0) return(df)
-	message('collapsing ', length(taxa), ' taxa:\n- ',
-			stringr::str_c(taxa, collapse='\n- '))
+	message('collapsing ', length(taxa), ' ',
+			if (length(taxa) == 1) 'taxon' else 'taxa',
+			':\n- ', stringr::str_c(taxa, collapse='\n- '))
 	for (taxon in taxa) df = collapse_taxon(df, taxon)
 	return(df)
-}
-
-collapse_families = function(df) {
-	families = df$taxon %>% purrr::keep(stringr::str_detect, 'idae$')
-	collapse_taxa(df, taxa=families)
 }
 
 add_y = function(df) {
@@ -285,7 +293,7 @@ arrange_tree = function(df) { # df = plt$data ; print(df, n=Inf)
 		taxon = df$taxon[i]
 		while (length(taxon) > 0) {
 			siblings = get_siblings(df, taxon)
-			rank = rank(siblings$from)[siblings$taxon == taxon]
+			rank = rank(siblings$from, ties.method='first')[siblings$taxon == taxon]
 			ranks = c(rank, ranks)
 			taxon = get_parent(df, taxon)$taxon
 		}

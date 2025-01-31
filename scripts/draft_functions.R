@@ -26,7 +26,7 @@ tree = function(clade=NULL,
 
   # data for plotting
   df = dplyr::bind_rows(tips, nodes) %>%
-    dplyr::mutate(col = name %>% stringr::str_detect('\\*$') %>% if_else('red', 'black')) %>%
+    dplyr::mutate(col = name %>% stringr::str_detect('\\*$') %>% ifelse('red', 'black')) %>%
     dplyr::mutate(name = name %>% str_remove('\\*$')) %>%
     dplyr::mutate(col = col %>% replace_na('black')) %>%
     check_tree_data %>%
@@ -623,9 +623,9 @@ load_nodes = function() {
   ) %>%
     dplyr::mutate(name = str_to_lower(name)) %>%
     dplyr::mutate(from = -abs(from)) %>%
-    dplyr::mutate(children = children %>% purrr::map(str_to_lower)) %>%
+    dplyr::mutate(children = children %>% purrr::map(stringr::str_to_lower)) %>%
     dplyr::mutate(is_tip = FALSE) %>%
-    # dplyr::mutate(col = name %>% stringr::str_detect('\\*$') %>% if_else('red', 'black')) %>%
+    # dplyr::mutate(col = name %>% stringr::str_detect('\\*$') %>% ifelse('red', 'black')) %>%
     # dplyr::mutate(name = name %>% str_remove('\\*$')) %>%
     identity
 }

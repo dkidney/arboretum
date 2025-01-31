@@ -4,7 +4,7 @@
 \alias{tree}
 \title{plot tree data}
 \usage{
-tree(taxon = NULL, collapse = NULL, max_tips = 100)
+tree(taxon = NULL, collapse = NULL, max_tips = 300, ...)
 }
 \arguments{
 \item{taxon}{TODO}
@@ -12,6 +12,8 @@ tree(taxon = NULL, collapse = NULL, max_tips = 100)
 \item{collapse}{TODO}
 
 \item{max_tips}{TODO}
+
+\item{...}{TODO}
 }
 \description{
 plot tree data
@@ -19,20 +21,18 @@ plot tree data
 \examples{
 library(arboretum)
 tree()
-tree('amniota', collapse=c('archosauromorpha',
-                           'therapsida',
-                           'lepidosauromorpha'))
-tree('therapsida', collapse='mammalia')
-tree('mammalia')
-tree('archosauromorpha', collapse=c('dinosauria',
-                                    'pterosauria',
-                                    'pseudosuchia',
-                                    'sauropterygia'))
-tree('pseudosuchia')
-tree('dinosauria', collapse = c('sauropoda',
-                                'ornithopoda',
-                                'theropoda',
-                                'ankylosauria',
-                                'ceratopsia'))
-tree('theropoda', collapse=c('avialae'))
+tree('dinosauria')
+tree('dinosauria',
+	 collapse = c('sauropodomorpha',
+	 			 'ornithopoda',
+	 			 'theropoda',
+	 			 'ankylosauria',
+	 			 'stegosauria',
+	 			 'pachycephalosauria',
+	 			 'ceratopsia'))
+tree('ornithischia', collapse='none')
+tree('sauropoda', collapse='none')
+tree('tetanurae', collapse='avialae')
+tree('sauropterygia', collapse='none')
+tree('synapsida')
 }
