@@ -19,5 +19,6 @@ Imports:
     magrittr,
     purrr,
     readr,
+    shiny,
     stringr,
     tidyr

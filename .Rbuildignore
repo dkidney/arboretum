@@ -5,3 +5,4 @@
 scripts
 ^LICENSE\.md$
 ^README\.Rmd$
+^app\.R$
