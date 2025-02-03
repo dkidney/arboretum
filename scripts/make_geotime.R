@@ -1,5 +1,4 @@
 suppressPackageStartupMessages({
-	library(magrittr)
 	library(tidyverse)
 })
 
@@ -85,14 +84,14 @@ geotime = tribble(
     'paleozoic', 'silurian'     , 'llandovery'   , 'aeronian'     , 440.8   ,
     'paleozoic', 'silurian'     , 'llandovery'   , 'rhuddanian'   , 443.8   ,
     'paleozoic', 'ordovician'   , NA_character_  , NA_character_  , 486.85  ,
-  ) %>%
-    dplyr::mutate(from = -abs(from)) %>%
-    dplyr::mutate(to = from %>% lag() %>% replace_na(0)) %>%
+  ) |>
+    dplyr::mutate(from = -abs(from)) |>
+    dplyr::mutate(to = from |> lag() |> replace_na(0)) |>
     dplyr::mutate(across(c(era, period, epoch, age), str_to_sentence))
 
 geotime
 
-geotime %>% write_tsv('inst/extdata/geotime.tsv')
+geotime |> write_tsv('inst/extdata/geotime.tsv')
 
 
 

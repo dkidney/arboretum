@@ -9,10 +9,10 @@
 #     0, 1, 0, 1, 'blue',
 #     0, 1, 0, -1, 'green',
 # )
-# df %>%
+# df |>
 # ggplot() +
 # geom_sigmoid(aes(x=x1, xend=x2, y=y1, yend=y2, col=col), c1=0.001, c2=.5, n=101) +
-# scale_colour_manual(values = df$col %>% set_names(df$col)) +
+# scale_colour_manual(values = df$col |> set_names(df$col)) +
 # geom_point(aes(x=x1, y=y1)) +
 # geom_point(aes(x=x2, y=y2), col='red')
 geom_sigmoid <- function(
@@ -37,8 +37,8 @@ StatSigmoid <- ggplot2::ggproto(
 	"StatSigmoid", ggplot2::Stat,
 	required_aes = c("x", "y", "xend", "yend"),
 	setup_data = function(data, params) {
-		data %>%
-			dplyr::group_by(PANEL) %>%
+		data |>
+			dplyr::group_by(PANEL) |>
 			dplyr::mutate(group = dplyr::row_number())
 	},
 	compute_group = function(data, scales, n, c1, c2) {
@@ -50,8 +50,8 @@ StatSigmoid <- ggplot2::ggproto(
 # 	"GeomSigmoid", Geom,
 # 	required_aes = c("x", "y", "xend", "yend"),
 # 	setup_data = function(data, params) {
-# 		data %>%
-# 			group_by(PANEL) %>%
+# 		data |>
+# 			group_by(PANEL) |>
 # 			mutate(group = row_number())
 # 	},
 # 	compute_group = function(data, scales, n, l) {
@@ -131,15 +131,15 @@ sigmoid = function(x1, x2, y1, y2, n=21, c1=0.1, c2=0) {
 	ys = 1 / (1 + exp(-1/c1 * (xs - c2)))
 	xs = rescale(xs, x1, x2)
 	ys = rescale(ys, y1, y2)
-	dplyr::tibble(x=xs, y=ys, i=seq_along(ys)) %>%
-		dplyr::mutate(y = round(.data$y, 5)) %>%
-		dplyr::group_by(.data$y) %>%
+	dplyr::tibble(x=xs, y=ys, i=seq_along(ys)) |>
+		dplyr::mutate(y = round(.data$y, 5)) |>
+		dplyr::group_by(.data$y) |>
 		dplyr::mutate(
 			d1 = duplicated(.data$y),
 			d2 = duplicated(.data$y, fromLast=TRUE)
-		) %>%
-		dplyr::ungroup() %>%
-		dplyr::filter(!(.data$d1 & .data$d2)) %>%
+		) |>
+		dplyr::ungroup() |>
+		dplyr::filter(!(.data$d1 & .data$d2)) |>
 		dplyr::select(.data$x, .data$y, .data$i)
 }
 

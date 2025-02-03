@@ -13,9 +13,9 @@ load_geotime = function() {
 		'silurian'     , 'wheat1',
 		'ordovician'   , 'aquamarine',
 		'cambrian'     , 'tan1',
-	) %>%
-		dplyr::mutate(dplyr::across(c(.data$period),
-									stringr::str_to_sentence)) %>%
+	) |>
+		dplyr::mutate(dplyr::across('period',
+									stringr::str_to_sentence)) |>
 		truncate_geotime_labels()
 
 	readr::read_tsv(
@@ -25,28 +25,28 @@ load_geotime = function() {
 			to = readr::col_double(),
 			.default = readr::col_character()
 		)
-	) %>%
-		dplyr::mutate(dplyr::across(c(.data$period, .data$epoch),
-									stringr::str_to_sentence)) %>%
-		truncate_geotime_labels() %>%
+	) |>
+		dplyr::mutate(dplyr::across(c('period', 'epoch'),
+									stringr::str_to_sentence)) |>
+		truncate_geotime_labels() |>
 		dplyr::left_join(period_fill, by='period')
 }
 
 truncate_geotime_labels = function(df) {
 	if (!is.null(df[['period']])) {
-		df$period %<>%
+		df$period = df$period |>
 			stringr::str_replace('Quaternary', 'Q')
 	}
 	if (!is.null(df[['epoch']])) {
-		df$epoch %<>%
-			stringr::str_replace('Pliocene', 'Pl.') %>%
-			stringr::str_replace('Pleistocene', 'Pl.') %>%
-			stringr::str_replace('Holocene', '') %>%
-			stringr::str_replace('ocene$', 'oc.') %>%
+		df$epoch = df$epoch |>
+			stringr::str_replace('Pliocene', 'Pl.') |>
+			stringr::str_replace('Pleistocene', 'Pl.') |>
+			stringr::str_replace('Holocene', '') |>
+			stringr::str_replace('ocene$', 'oc.') |>
 			stringr::str_replace('ian$', '.')
 	}
 	if (!is.null(df[['age']])) {
-		df$age %<>%
+		df$age = df$age |>
 			stringr::str_replace('ian$', '.')
 	}
 	return(df)
@@ -54,63 +54,63 @@ truncate_geotime_labels = function(df) {
 
 split_geotime_by_timescale = function(geotime) {
 
-	era = geotime %>%
-		dplyr::group_by(.data$era) %>%
+	era = geotime |>
+		dplyr::group_by(.data$era) |>
 		dplyr::summarise(from=min(.data$from),
 						 to=max(.data$to),
-						 .groups = 'drop') %>%
+						 .groups = 'drop') |>
 		dplyr::arrange(dplyr::desc(.data$from))
 
-	period = geotime %>%
-		# dplyr::group_by(dplyr::across(dplyr::one_of('era', 'period', 'fill'))) %>%
+	period = geotime |>
+		# dplyr::group_by(dplyr::across(dplyr::one_of('era', 'period', 'fill'))) |>
 		dplyr::group_by(.data$era,
 						.data$period,
-						.data$fill) %>%
+						.data$fill) |>
 		dplyr::summarise(from=min(.data$from),
 						 to=max(.data$to),
-						 .groups = 'drop') %>%
-		# dplyr::select(dplyr::one_of('era', 'period', 'from', 'to', 'fill')) %>%
+						 .groups = 'drop') |>
+		# dplyr::select(dplyr::one_of('era', 'period', 'from', 'to', 'fill')) |>
 		dplyr::select(.data$era,
 					  .data$period,
 					  .data$from,
 					  .data$to,
-					  .data$fill) %>%
+					  .data$fill) |>
 		dplyr::arrange(dplyr::desc(.data$from))
 
-	epoch = geotime %>%
-		# dplyr::group_by(dplyr::across(dplyr::one_of('era', 'period', 'epoch', 'fill'))) %>%
+	epoch = geotime |>
+		# dplyr::group_by(dplyr::across(dplyr::one_of('era', 'period', 'epoch', 'fill'))) |>
 		dplyr::group_by(.data$era,
 						.data$period,
 						.data$epoch,
-						.data$fill) %>%
+						.data$fill) |>
 		dplyr::summarise(from=min(.data$from),
 						 to=max(.data$to),
-						 .groups = 'drop') %>%
+						 .groups = 'drop') |>
 		dplyr::group_by(.data$era,
-						.data$period) %>%
+						.data$period) |>
 		dplyr::mutate(
 			rank = rank(.data$from),
 			amount = 1 / (max(.data$rank) + 1) * (.data$rank - 1),
 			fill = colorspace::darken(.data$fill, .data$amount)
-		) %>%
-		dplyr::ungroup() %>%
-		# dplyr::select(dplyr::one_of('era', 'period', 'epoch', 'from', 'to', 'fill')) %>%
+		) |>
+		dplyr::ungroup() |>
+		# dplyr::select(dplyr::one_of('era', 'period', 'epoch', 'from', 'to', 'fill')) |>
 		dplyr::select(.data$era,
 					  .data$period,
 					  .data$epoch,
 					  .data$from,
 					  .data$to,
-					  .data$fill) %>%
+					  .data$fill) |>
 		dplyr::arrange(dplyr::desc(.data$from))
 
-	age = geotime %>%
+	age = geotime |>
 		dplyr::group_by(.data$era,
 						.data$period,
 						.data$epoch,
-						.data$age) %>%
+						.data$age) |>
 		dplyr::summarise(from=min(.data$from),
 						 to=max(.data$to),
-						 .groups = 'drop') %>%
+						 .groups = 'drop') |>
 		dplyr::arrange(dplyr::desc(.data$from))
 
 	list(
@@ -131,6 +131,6 @@ load_events = function() {
 		'CRC'   , 305    , 'blue',
 		'Late D', 371.1  , 'red',
 		'O-S'   , 445    , 'red',
-	) %>%
+	) |>
 		dplyr::mutate(ma = -abs(.data$ma))
 }

@@ -24,33 +24,11 @@
 
 tree = function(taxon=NULL, collapse=NULL, max_tips=300, ...) {
 
-	df = prepare_tree_data(taxon=taxon, collapse=collapse)
+	# df = prepare_tree_data(taxon=taxon, collapse=collapse)
+	df = tree_data(taxon=taxon, collapse=collapse)
 
 	plot_tree_data(df, max_tips=max_tips, ...)
 
-}
-
-prepare_tree_data = function(taxon=NULL, collapse='none') {
-	df = load_tree_data()
-	# if (is.null(taxon)) {
-	# 	taxon = 'tetrapodomorpha'
-	# }
-	if (!is.null(taxon)) {
-		df = subset_taxon(df, tolower(taxon))
-	}
-	if (is.null(collapse)) {
-		# collapsable_taxa = get_collapsable_taxa(df, taxon)
-		# collapse = get_default_collapsed(df, collapsable_taxa)
-		collapse = get_default_collapsed(df)
-	} else {
-		if (length(collapse) == 1) {
-			if (collapse == 'none') return(df)
-		}
-	}
-	df = collapse_taxa(df, collapse)
-	# df = check_n_tips(df, max_tips)
-	# df = arrange_tree(df)
-	df
 }
 
 # get_collapsable_taxa = function(df, taxon) {
@@ -66,59 +44,50 @@ prepare_tree_data = function(taxon=NULL, collapse='none') {
 # get_default_collapsed = function(df, collapsable_taxa) {
 # taxa = collapsable_taxa
 
-get_default_collapsed = function(df) {
-	taxa = get_nodes(df, ignore_roots=TRUE)$taxon
-	# taxa = taxa[taxa != get_roots(df)$taxon]
-	taxa = taxa[stringr::str_detect(taxa, '(morpha|formes|oidea|ae)$')]
-	if (length(taxa) == 0) return(character(0))
-	nested = rep(FALSE, length(taxa))
-	for (i in seq_along(taxa)) { # i=1
-		if (nested[i]) next
-		descendants = get_descendants_taxon(df, taxa[i])$taxon
-		nested[taxa %in% descendants] = TRUE
-	}
-	taxa = sort(taxa[!nested])
-	# message('collapsing ', length(taxa), ' taxa by default:\n\t',
-	# 		stringr::str_c(taxa, collapse='\n\t'))
-	taxa
-	# selected_taxa = taxa
-	# list(
-	# 	choices = collapsable_taxa,
-	# 	selected = selected_taxa
-	# )
-}
-
 plot_tree_data = function(df, max_tips=100, textsize=3) {
 
-	# if (!is.null(df$collapsed)) {
-	# 	df = df %>% dplyr::filter(.data$collapsed)
+	# convert collapsed taxa to tips - see commented out section in collapse_taxon
+	# browser()
+
+
+	# if (!is.null(df$is_collapsed)) {
+	# 	df = df |> dplyr::filter(.data$is_collapsed)
 	# }
 
 	# message('tree data used for plotting:')
-	message(tree_data_summary(df))
+	print(df)
 
 	# df = check_n_tips(df, max_tips)
-	if(nrow(get_tips(df)) > max_tips) {
+	if(get_n_tips(df) > max_tips) {
 		warning('number of tips exceeds max_tips (', max_tips, ')')
 		return(NULL)
 	}
-	df = arrange_tree(df)
 
-	plt = df %>%
+	# label coordinates --------------------------------------------------------
+
+	df = df |>
+		dplyr::mutate(
+			label_x = dplyr::case_when(
+				.data$is_tip ~ (.data$from + .data$to) / 2,
+				.default = .data$from
+			))
+
+	# create plot obj ----------------------------------------------------------
+
+	plt = df |>
 		ggplot2::ggplot(ggplot2::aes(x=.data$from,
 									 y=.data$y))
-
 
 	# geotime ------------------------------------------------------------------
 
 	geotime = load_geotime()
 
 	# filter periods to match tree data
-	periods = geotime %>%
-		dplyr::filter(.data$to > min(df$from, na.rm = TRUE)) %>%
-		dplyr::select(.data$period) %>%
+	periods = geotime |>
+		dplyr::filter(.data$to > min(df$from, na.rm = TRUE)) |>
+		dplyr::select(.data$period) |>
 		dplyr::distinct()
-	geotime %<>%
+	geotime = geotime |>
 		dplyr::inner_join(periods, by='period')
 
 	y_max = max(df$y, na.rm = TRUE)
@@ -285,7 +254,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 		ggplot2::geom_text(
 			ggplot2::aes(x = (.data$from + .data$to) / 2, label = .data$epoch),
 			y = (y_max_epoch + y_min_epoch) / 2,
-			data=geotime$epoch %>% dplyr::filter(!is.na(.data$epoch)),
+			data=geotime$epoch |> dplyr::filter(!is.na(.data$epoch)),
 			size = epoch_textsize,
 		)
 
@@ -314,7 +283,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 		ggplot2::geom_text(
 			ggplot2::aes(x = (.data$from + .data$to) / 2, label = .data$age),
 			y = y_min_age + (y_max_age - y_min_age) * 0.05,
-			data=geotime$age %>% dplyr::filter(!is.na(.data$age)),
+			data=geotime$age |> dplyr::filter(!is.na(.data$age)),
 			size = age_textsize,
 			angle=90,
 			hjust=0,
@@ -323,7 +292,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 
 	# events -------------------------------------------------------------------
 
-	events = load_events() %>%
+	events = load_events() |>
 		dplyr::filter(.data$ma > min(geotime$period$from))
 
 	plt = plt +
@@ -365,33 +334,38 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 	plt = plt +
 		ggplot2::geom_segment(
 			ggplot2::aes(xend=.data$to, yend=.data$y),
-			data=df %>% get_tips()
+			data=df |> get_tips()
 		) +
-		ggplot2::geom_text(
-			ggplot2::aes(x=(.data$from + .data$to) / 2, label=.data$taxon),
-			data=df %>% get_tips(),
-			vjust=-0.5,
-			size = textsize,
-		) +
+		# ggplot2::geom_text(
+		# 	ggplot2::aes(x=(.data$from + .data$to) / 2, label=.data$taxon),
+		# 	data=df |> get_tips(),
+		# 	vjust=-0.5,
+		# 	size = textsize,
+		# ) +
 		ggplot2::geom_point(
-			data=df %>% get_tips(),
+			data=df |> get_tips(),
 			size = pointsize,
-			col=get_tips(df)$asterisk %>% dplyr::if_else('red', 'black'),
+			col=get_tips(df)$asterisk |> dplyr::if_else('red', 'black'),
 		) +
 		ggplot2::geom_point(
 			ggplot2::aes(x=.data$to),
-			data=df %>% get_tips() %>% dplyr::filter(.data$to < 0),
+			data=df |> get_tips() |> dplyr::filter(.data$to < 0),
 			size = pointsize,
 		) +
 		ggplot2::geom_point(
 			# ggplot2::aes(col=asterisk),
-			data=df %>% get_nodes(),
+			data=df |> get_nodes(),
 			size = pointsize,
-			col=get_nodes(df)$asterisk %>% dplyr::if_else('red', 'black'),
+			col=get_nodes(df)$asterisk |> dplyr::if_else('red', 'black'),
 		) +
+		# ggplot2::geom_text(
+		# 	ggplot2::aes(label=.data$taxon),
+		# 	data=df |> get_nodes(),
+		# 	vjust=-0.5,
+		# 	size = textsize,
+		# ) +
 		ggplot2::geom_text(
-			ggplot2::aes(label=.data$taxon),
-			data=df %>% get_nodes(),
+			ggplot2::aes(x=.data$label_x, label=.data$taxon),
 			vjust=-0.5,
 			size = textsize,
 		) +
@@ -425,28 +399,30 @@ check_n_tips = function(df, max_tips=NULL) {
 }
 
 get_parent_child_relationships = function(df) {
-	nodes = get_nodes(df)
-	if (nrow(nodes) == 0) return(NULL)
+	# browser()
+	if (all(df$is_tip)) return(NULL)
+	# nodes = get_nodes(df)
+	# if (nrow(nodes) == 0) return(NULL)
 	dplyr::inner_join(
-		df %>%
+		df |>
 			dplyr::select(.data$taxon,
 						  x=.data$from,
 						  .data$y,
-						  .data$children) %>%
-			dplyr::mutate(children = .data$children %>% purrr::map(~dplyr::tibble(child=.x))) %>%
+						  .data$children) |>
+			dplyr::mutate(children = .data$children |> purrr::map(~dplyr::tibble(child=.x))) |>
 			tidyr::unnest(.data$children),
-		df %>%
+		df |>
 			dplyr::select(child=.data$taxon,
 						  xend=.data$from,
 						  yend=.data$y),
 		by='child'
-	) %>%
+	) |>
 		dplyr::arrange(.data$taxon,
 					   .data$yend)
 }
 
 highlight_taxon = function(plt, taxon, col=1, alpha=0.25) {
-	temp = plt$data %>% subset_taxon(taxon)
+	temp = plt$data |> subset_taxon(taxon)
 	plt +
 		ggplot2::annotate(
 			"rect",
