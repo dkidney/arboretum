@@ -10,7 +10,7 @@ tree_data = function(taxon, collapse='default') {
 	load_tree_data() |>
 		subset(taxon) |>
 		collapse(collapse) |>
-		sort() |>
+		reorder() |>
 		identity()
 }
 
@@ -39,53 +39,12 @@ tree_data = function(taxon, collapse='default') {
 # }
 
 load_tree_data = function() {
-	df = readr::read_tsv(
-		system.file("extdata", "tree_data.tsv", package="arboretum"),
-		col_types = readr::cols(
-			from = readr::col_double(),
-			to = readr::col_double(),
-			.default = readr::col_character()
-		)
-	) |>
-		dplyr::mutate(dplyr::across(c('from', 'to'), ~-abs(.x))) |>
-		dplyr::mutate(dplyr::across(c('taxon', 'children'), stringr::str_to_lower)) |>
-		dplyr::mutate(children = .data$children |> tidyr::replace_na('') |> strsplit(split='\\s*,\\s*')) |>
-		dplyr::mutate(asterisk = .data$taxon |> stringr::str_detect('\\*$')) |>
-		dplyr::mutate(taxon = .data$taxon |> stringr::str_remove('\\*$'))
-
-	# add parent column
-	df = dplyr::left_join(
-		df,
-		df |>
-			dplyr::select(parent='taxon', taxon='children') |>
-			tidyr::unnest('taxon'),
-		by='taxon'
-	) |>
-		dplyr::select(dplyr::one_of('taxon', 'from', 'to', 'parent'),
-					  dplyr::everything())
-
-	# add indicator columns
-	df = update_indicator_columns(df)
-	# dplyr::mutate(plot = TRUE) |>
-	# dplyr::mutate(collapsed = FALSE) |>
-	# dplyr::mutate(is_root = is.na(.data$parent)) |>
-	# dplyr::mutate(is_tip = purrr::map_int(.data$children, length) == 0) |>
-	# dplyr::mutate(is_node = !.data$is_root & !.data$is_tip)
-
-	# class(df) = c('tree_data', class(df))
-	# attr(df, 'collapsed') <- 'none'
-	# attr(df, 'roots') <- df$taxon[!df$taxon %in% unlist(df$children)]
-
-	df = structure(df, class = c('tree_data', class(df)))
-
-	df |>
-		check_tree_data() |>
-		dplyr::arrange(.data$taxon)
-
+	readRDS(system.file("extdata", "tree_data.rds", package="arboretum"))
 }
 
 #' @export
-summary.tree_data = function(x) {
+summary.tree_data = function(object, ...) {
+	df = object
 	# browser()
 
 	# 	n_rows = nrow(df)
@@ -96,21 +55,21 @@ summary.tree_data = function(x) {
 	# 	stopifnot((n_roots + n_nodes + n_tips) == nrow(df))
 
 	out = list(
-		n_roots = get_n_roots(x),
-		roots = get_roots(x)$taxon,
-		n_nodes = get_n_nodes(x),
-		nodes = get_nodes(x)$taxon,
-		n_tips = get_n_tips(x),
-		tips = get_tips(x)$taxon,
-		n_collapsed = get_n_collapsed(x),
-		collapsed = get_collapsed(x)$taxon
+		n_roots = get_n_roots(df),
+		roots = get_roots(df)$taxon,
+		n_nodes = get_n_nodes(df),
+		nodes = get_nodes(df)$taxon,
+		n_tips = get_n_tips(df),
+		tips = get_tips(df)$taxon,
+		n_collapsed = get_n_collapsed(df),
+		collapsed = get_collapsed(df)$taxon
 	)
 
-	if ((out$n_roots + out$n_nodes + out$n_tips) != nrow(x)) {
+	if ((out$n_roots + out$n_nodes + out$n_tips) != nrow(df)) {
 		browser()
 	}
 
-	stopifnot((out$n_roots + out$n_nodes + out$n_tips) == nrow(x))
+	stopifnot((out$n_roots + out$n_nodes + out$n_tips) == nrow(df))
 
 	structure(out, class = c('summary_tree_data', class(out)))
 }
@@ -125,9 +84,9 @@ summary.tree_data = function(x) {
 
 
 #' @export
-print.summary_tree_data = function(x) {
+print.summary_tree_data = function(x, ...) {
 	# browser()
-	cat('\n')
+	# cat('\n')
 
 	roots = paste0(x$n_roots, ' root')
 	if (x$n_roots > 1) roots = paste0(roots, 's')
@@ -145,10 +104,11 @@ print.summary_tree_data = function(x) {
 		collapsed = paste0(collapsed, ':', s, paste(x$collapsed, collapse=s))
 	}
 
-	cat(paste(roots, nodes, tips, collapsed, sep='\n'))
+	x = paste(roots, nodes, tips, collapsed, sep='\n')
 
-	cat('\n')
+	cat(x)
 
+	invisible(x)
 
 	# cat(stringr::str_glue(
 	# 	roots,
@@ -195,9 +155,10 @@ get_info = function(df, taxon) {
 }
 
 #' @export
-subset.tree_data = function(df, subset) {
-	if (missing(subset) || length(subset) == 0 || is.na(subset)) return(df)
+subset.tree_data = function(x, subset, ...) {
+	if (missing(subset) || length(subset) == 0 || is.na(subset)) return(x)
 	stopifnot(length(subset) == 1)
+	df = x
 	taxon = subset
 	check_valid_taxon(df, taxon)
 	if (is_root(df, taxon) && n_roots(df) == 1) return(df)
@@ -258,18 +219,16 @@ update_indicator_columns = function(df) {
 
 collapse = function(df, taxa=NULL) {
 	# browser()
-	if (missing(taxa) | is.null(taxa) || is.na(taxa)) {
-		taxa = 'default'
-	}
-	if (taxa == 'none') return(df)
+	if (missing(taxa) || is.null(taxa) || (length(taxa) == 1 && is.na(taxa))) taxa = 'default'
+	if (length(taxa) == 1 && taxa == 'none') return(df)
 	node_taxa = get_nodes(df)$taxon
-	if (taxa == 'default'){
+	if (length(taxa) == 1 && taxa == 'default'){
 		# taxa = get_default_collapsed(df)
 		taxa = node_taxa |> purrr::keep(stringr::str_detect, '(morpha|formes|oidea|ae)$')
-		if (length(taxa) == 0) return(df)
 	} else {
 		taxa = taxa |> purrr::keep(~.x %in% node_taxa)
 	}
+	if (length(taxa) == 0) return(df)
 	# browser()
 	# get_unnested_taxa(df, taxa)
 	# taxa = taxa[!is_nested(df, taxa)]
@@ -351,9 +310,7 @@ collapse = function(df, taxa=NULL) {
 # 	# )
 # }
 
-
-#' @export
-sort.tree_data = function(df) { # df = plt$data ; print(df, n=Inf)
+reorder = function(df) { # df = plt$data ; print(df, n=Inf)
 	# browser()
 	# collapsed = df |> dplyr::filter(.data$is_collapsed)
 	# df = df |> dplyr::filter(!.data$is_collapsed)
@@ -585,10 +542,10 @@ check_tree_data = function(df) {
 	}
 
 	# check roots
-	# roots = get_roots(df)
-	# if (nrow(roots) > 1) {
-	# 	warning('multiple roots: ', stringr::str_c(sort(roots$taxon), collapse = '\n'))
-	# }
+	roots = get_roots(df)
+	if (nrow(roots) > 1) {
+		warning('multiple roots: ', stringr::str_c(sort(roots$taxon), collapse = '\n'))
+	}
 
 	invisible(df)
 

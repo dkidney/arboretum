@@ -13,15 +13,16 @@ Suggests:
     tidyverse
 Config/testthat/edition: 3
 Imports: 
+    bslib,
     colorspace,
     dplyr,
     ggplot2,
-    magrittr,
     purrr,
     readr,
     shiny,
     stringr,
-    tidyr
+    tidyr,
+    utils
 Depends: 
-    R (>= 2.10)
+    R (>= 4.0)
 LazyData: true

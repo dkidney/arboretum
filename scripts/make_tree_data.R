@@ -2,29 +2,29 @@
 # 	library(tidyverse)
 # })
 
-tree_data = tibble::tribble(
+df = tibble::tribble(
 	~taxon, ~from, ~to, ~children, ~notes,
 	"abelisauridae", -143, -66, "carnotaurus", "'Abel's lizards'",
 	"acanthostega", -365, -365, NA, NA,
 	"aepyornithiformes", -2.58, -0.001, NA, " elephant birds, incl Aepyornis",
 	"aetosauria", -231.4, -201.4, "aetosaurus, desmatosuchus", NA,
 	"aetosaurus*", -227.3, -205.7, NA, NA,
-	"afrotheria", -65, -65, "proboscidea, sirenia", NA,
+	"afrotheria", -65, 0, "proboscidea, sirenia", NA,
 	"alamosaurus", -70, -66, NA, NA,
 	"albertosaurus", -71, -68, NA, NA,
 	"alioramus", -70, -70, NA, NA,
 	"alligator", -37.2, 0, NA, NA,
 	"alligatoroidea", -83.6, 0, "alligator, caiman, deinosuchus", NA,
-	"allosauridae", -179.17, -179.17, "allosaurus", NA,
+	"allosauridae", -179.17, -145, "allosaurus", NA,
 	"allosaurus", -155, -143.1, NA, NA,
 	"alvarezsauridae", -97, -66, "alvarezsaurus", NA,
 	# "alvarezsauroidea", -160, -66, NA, NA,
 	"alvarezsaurus", -86, -83, NA, NA,
 	"ambulocetus", -48, -47, NA, NA,
-	"amniota", -323, -323, "sauropsida, synapsida", NA,
+	"amniota", -323, 0, "sauropsida, synapsida", NA,
 	"andrewsarchus", -47.8, -37.71, NA, NA,
 	"anhangueridae", -140, -92.5, NA, NA,
-	"ankylosauria", -167, -167, "ankylosauridae, nodosauridae", NA,
+	"ankylosauria", -167, -66, "ankylosauridae, nodosauridae", NA,
 	"ankylosauridae", -122, -66, "ankylosaurus, euoplocephalus", NA,
 	"ankylosaurus", -68, -66, NA, NA,
 	"anura", -200, 0, NA, "frogs and toads",
@@ -34,18 +34,18 @@ tree_data = tibble::tribble(
 	"archaeopteryx", -150.8, -148.5, NA, "'old-wing', Southern Germany",
 	"archegosauridae*", -300, -252, "archegosaurus, prionosuchus", NA,
 	"archegosaurus", -299, -253, NA, NA,
-	"archelosauria", -260, -260, "archosauromorpha, pantestudines", NA,
-	"archosauria", -248, -248, "avemetatarsalia, pseudosuchia", NA,
+	"archelosauria", -260, 0, "archosauromorpha, pantestudines", NA,
+	"archosauria", -248, 0, "avemetatarsalia, pseudosuchia", NA,
 	"archosauriformes", -252, 0, "archosauria, erythrosuchus, euparkeria, vancleavea", NA,
-	"archosauromorpha", -260, -260, "archosauriformes, ichthyosauromorpha, rhynchosauria, sauropterygia, thalattosauria", NA,
+	"archosauromorpha", -260, 0, "archosauriformes, ichthyosauromorpha, rhynchosauria, sauropterygia, thalattosauria", NA,
 	"argentinosaurus", -96.2, -92.19, NA, NA,
-	"artiodactyla*", -60, -60, "andrewsarchus, cetacea, entelodontidae", NA,
+	"artiodactyla*", -60, 0, "andrewsarchus, cetacea, entelodontidae", NA,
 	"atrociraptor", -72.2, -71.5, NA, NA,
 	"attenborosaurus", -196.5, -189.6, NA, NA,
 	"australovenator", -95, -95, NA, NA,
-	"avemetatarsalia", -247, -247, "dinosauromorpha, pterosauria", NA,
-	"aves*", -75, -75, "neognathae, palaeognathae", NA,
-	"avialae", -150.8, -150.8, "archaeopteryx, enantiornithes, euornithes", NA,
+	"avemetatarsalia", -247, 0, "dinosauromorpha, pterosauria", NA,
+	"aves*", -75, 0, "neognathae, palaeognathae", NA,
+	"avialae", -150.8, 0, "archaeopteryx, enantiornithes, euornithes", NA,
 	"azhdarchidae", -92, -66, NA, "includes Quetzalcoatlus",
 	"barinasuchus", -42.2, -11.8, NA, NA,
 	"barosaurus", -152, -150, NA, NA,
@@ -64,18 +64,18 @@ tree_data = tibble::tribble(
 	"camarasaurus", -155, -143.1, NA, NA,
 	"camptosaurus", -156.3, -146.8, NA, NA,
 	"canidae", -37.8, 0, NA, NA,
-	"carcharodontosauridae", -154, -154, "carcharodontosaurus, concavenator, giganotosaurus, neovenator, tyrannotitan", NA,
+	"carcharodontosauridae", -154, -90, "carcharodontosaurus, concavenator, giganotosaurus, neovenator, tyrannotitan", NA,
 	"carcharodontosaurus", -100, -94, NA, "'jagged toothed lizard', Northwest Africa",
 	"carnivora", -51.88, 0, "canidae, felidae, ursidae", NA,
-	"carnosauria*", -180, -180, "allosauridae, carcharodontosauridae, metriacanthosauridae", NA,
+	"carnosauria*", -180, -90, "allosauridae, carcharodontosauridae, metriacanthosauridae", NA,
 	"carnotaurus", -72, -69, NA, NA,
 	"casuariiformes", -23, 0, NA, "cassowarys and emus",
 	"centrosaurus", -76.5, -75.5, NA, NA,
 	"ceratopsia", -161, -66, "ceratopsidae, protoceratops, psittacosaurus", NA,
 	"ceratopsidae*", -90, -66, "centrosaurus, chasmosaurus, diabloceratops, pachyrhinosaurus, styracosaurus, triceratops", NA,
-	"ceratosauria", -199.3, -199.3, "abelisauridae, ceratosaurus, noasauridae", NA,
+	"ceratosauria", -199.3, -66, "abelisauridae, ceratosaurus, noasauridae", NA,
 	"ceratosaurus", -153, -148, NA, "'horn lizard', USA",
-	"cetacea", -56, -56, "ambulocetus, basilosauridae, mysticeti, odontoceti, pakicetus, rodhocetus", NA,
+	"cetacea", -56, 0, "ambulocetus, basilosauridae, mysticeti, odontoceti, pakicetus, rodhocetus", NA,
 	"cetiosauridae", -178, -161, "cetiosaurus", NA,
 	"cetiosaurus", -170, -164.7, NA, NA,
 	"chalicotheriidae", -48.6, -1.806, NA, NA,
@@ -86,27 +86,27 @@ tree_data = tibble::tribble(
 	"cingulata", -58.7, 0, "glyptodontinae", "armadillos",
 	"coelophysis", -215, -208.5, NA, NA,
 	"coelophysoidea", -227, -183, "coelophysis, dilophosaurus", NA,
-	"coelurosauria*", -170, -170, "compsognathidae, maniraptora, ornitholestes, ornithomimosauria, tyrannosauroidea", NA,
+	"coelurosauria*", -170, 0, "compsognathidae, maniraptora, ornitholestes, ornithomimosauria, tyrannosauroidea", NA,
 	"compsognathidae", -151.5, -108, "compsognathus, sinosauropteryx", NA,
 	"compsognathus", -150.8, -145, NA, NA,
 	"concavenator", -125, -125, NA, NA,
 	"corythosaurus", -77, -75.7, NA, NA,
-	"crocodilia", -100, -100, "alligatoroidea, crocodyloidea, gavialoidea", NA,
+	"crocodilia", -100, 0, "alligatoroidea, crocodyloidea, gavialoidea", NA,
 	"crocodylidae", -46, 0, "crocodylus", NA,
-	"crocodyliformes", -225, -225, "crocodilia, notosuchia, pholidosauridae", NA,
+	"crocodyliformes", -225, 0, "crocodilia, notosuchia, pholidosauridae", NA,
 	"crocodyloidea*", -70, 0, "crocodylidae", NA,
-	"crocodylomorpha", -235, -235, "crocodyliformes, sphenosuchia, thalattosuchia", NA,
+	"crocodylomorpha", -235, 0, "crocodyliformes, sphenosuchia, thalattosuchia", NA,
 	"crocodylus", -25, 0, NA, NA,
 	"cryptoclididae", -170, -130, "cryptoclidus, kimmerosaurus", NA,
 	"cryptoclidus", -166, -160, NA, NA,
 	"ctenosauriscidae", -247.5, -237, NA, "all species had large 'sails' on their backs",
-	"cynodontia", -260, -260, "cynognathus, mammaliamorpha", NA,
+	"cynodontia", -260, 0, "cynognathus, mammaliamorpha", NA,
 	"cynognathus", -247, -237, NA, NA,
 	"dacentrurus", -154, -140, NA, NA,
 	"daspletosaurus", -78, -74.4, NA, NA,
 	"deinocheiridae", -115, -69, "deinocheirus", NA,
 	"deinocheirus", -70, -70, NA, NA,
-	"deinonychosauria", -167, -167, "dromaeosauridae, troodontidae", NA,
+	"deinonychosauria", -167, 66, "dromaeosauridae, troodontidae", NA,
 	"deinonychus", -115, -108, NA, NA,
 	"deinosuchus", -82, -73, NA, NA,
 	"deinotheriidae", -28, -1, "deinotherium", NA,
@@ -115,7 +115,7 @@ tree_data = tibble::tribble(
 	"diabloceratops", -81.4, -81, NA, NA,
 	"diadectes", -290, -272, NA, "'crosswise-biter' one of the first herbivorous tetrapods, one of the first fully terrestrial vertebrates to attain large size",
 	"diadectidae", -305, -256, "diadectes, diasparactus", NA,
-	"diapsida", -302, -302, "sauria", NA,
+	"diapsida", -302, 0, "sauria", NA,
 	"diasparactus", -296.4, -295, NA, NA,
 	"dicynodontia", -268, -201.4, "lisowicia, lystrosaurus, placerias", "'two dog tooth'",
 	"didelphodon", -73, -66, NA, NA,
@@ -125,8 +125,8 @@ tree_data = tibble::tribble(
 	"dimorphodontidae", -208, -182, NA, NA,
 	"dinocephalia", -279, -260, "moschops", "'terrible head'",
 	"dinornithiformes", -17, -6e-04, NA, "moas, incl Dinornis",
-	"dinosauria*", -240, -240, "ornithischia, saurischia", NA,
-	"dinosauromorpha", -247, -247, "dinosauria", NA,
+	"dinosauria*", -240, 0, "ornithischia, saurischia", NA,
+	"dinosauromorpha", -247, 0, "dinosauria", NA,
 	"diplocaulus", -306, -255, NA, NA,
 	"diplodocidae", -170, -136.4, "apatosaurus, barosaurus, brontosaurus, diplodocus", NA,
 	"diplodocus", -154, -152, NA, NA,
@@ -135,7 +135,7 @@ tree_data = tibble::tribble(
 	"diprotodontidae", -28.4, -0.04, "diprotodon", "giant wombats",
 	"dorudon", -41.03, -33.9, NA, NA,
 	"dreadnoughtus", -76, -70, NA, NA,
-	"dromaeosauridae", -145, -145, "eudromaeosauria, microraptor", NA,
+	"dromaeosauridae", -145, -66, "eudromaeosauria, microraptor", NA,
 	"dromaeosaurus", -80, -69.1, NA, NA,
 	"dryosauridae", -164, -115, "dryosaurus", NA,
 	"dryosaurus", -155, -145, NA, NA,
@@ -157,15 +157,15 @@ tree_data = tibble::tribble(
 	"equidae", -55.8, 0, NA, NA,
 	"eryops", -299, -273, NA, NA,
 	"erythrosuchus", -249, -244, NA, NA,
-	"euarchontoglires", -66, -66, "lagomorpha, primates, rodentia", NA,
+	"euarchontoglires", -66, 0, "lagomorpha, primates, rodentia", NA,
 	"eudromaeosauria", -143, -66, "atrociraptor, deinonychus, dromaeosaurus, pyroraptor, utahraptor, velociraptor", NA,
 	"euhelopodidae", -145, -88, NA, NA,
 	"euoplocephalus", -76.4, -75.6, NA, NA,
-	"euornithes", -130.7, -130.7, "aves, hesperornis, ichthyornis", NA,
+	"euornithes", -130.7, 0, "aves, hesperornis, ichthyornis", NA,
 	"euparkeria", -247, -247, NA, NA,
-	"eureptilia", -311, -311, "araeoscelidia, diapsida", NA,
+	"eureptilia", -311, 0, "araeoscelidia, diapsida", NA,
 	"europelta", -113, -113, NA, NA,
-	"eutheria", -125, -125, "placentalia", NA,
+	"eutheria", -125, 0, "placentalia", NA,
 	"felidae", -30.8, 0, "smilodon", NA,
 	"fukuiraptor", -125, -115, NA, NA,
 	"gallimimus", -70, -70, NA, NA,
@@ -187,7 +187,7 @@ tree_data = tibble::tribble(
 	"gymnophiona", -223, 0, NA, "caecilian",
 	"hadrosauridae*", -90, -66, "corythosaurus, edmontosaurus, hadrosaurus, lambeosaurus, maiasaura, parasaurolophus, shantungosaurus", NA,
 	"hadrosaurus", -83.6, -77.9, NA, NA,
-	"herrerasauridae", -233.23, -233.23, "herrerasaurus, staurikosaurus", NA,
+	"herrerasauridae", -233.23, -228.91, "herrerasaurus, staurikosaurus", NA,
 	"herrerasaurus", -231.4, -228.91, NA, NA,
 	"hesperornis", -83.6, -72, NA, NA,
 	"heterodontosaurus", -200, -190, NA, NA,
@@ -204,15 +204,15 @@ tree_data = tibble::tribble(
 	"kronosaurus", -125, -99.6, NA, NA,
 	"lagomorpha", -59, 0, NA, NA,
 	"lambeosaurus", -76, -75, NA, NA,
-	"laurasiatheria", -65, -65, "artiodactyla, carnivora, chiroptera, hyaenodontidae, perissodactyla", NA,
-	"lepidosauromorpha", -252, -252, "rhynchocephalia, squamata", NA,
+	"laurasiatheria", -65, 0, "artiodactyla, carnivora, chiroptera, hyaenodontidae, perissodactyla", NA,
+	"lepidosauromorpha", -252, 0, "rhynchocephalia, squamata", NA,
 	"lepospondyli", -339, -251.902, "diplocaulus", NA,
 	"leptocleididae", -145, -100.5, "leptocleidus", NA,
 	"leptocleidus", -135, -125, NA, NA,
 	"leptosuchus", -237, -208.5, NA, NA,
 	"liopleurodon", -166, -155, NA, NA,
 	"lisowicia", -210, -205, NA, NA,
-	"lissamphibia", -250, -250, "anura, gymnophiona, urodela", NA,
+	"lissamphibia", -250, 0, "anura, gymnophiona, urodela", NA,
 	"lotosaurus", -238, -238, NA, NA,
 	"loxodonta", -7, 0, NA, "African elephants",
 	"lycaenops", -260, -260, NA, NA,
@@ -221,25 +221,25 @@ tree_data = tibble::tribble(
 	"maiasaura", -86.3, -70.6, NA, NA,
 	"mamenchisauridae", -184.5, -114, "mamenchisaurus", NA,
 	"mamenchisaurus", -161, -114.4, NA, NA,
-	"mammalia", -167, -167, "monotremata, multituberculata, theria", NA,
-	"mammaliaformes", -227, -227, "mammalia, morganucodonta", NA,
-	"mammaliamorpha", -232, -232, "mammaliaformes", NA,
+	"mammalia", -167, 0, "monotremata, multituberculata, theria", NA,
+	"mammaliaformes", -227, 0, "mammalia, morganucodonta", NA,
+	"mammaliamorpha", -232, 0, "mammaliaformes", NA,
 	"mammuthus", -6.2, -0.004, NA, NA,
-	"maniraptora*", -167, -167, "alvarezsauridae, oviraptoridae, paraves, therizinosauridae", NA,
+	"maniraptora*", -167, 0, "alvarezsauridae, oviraptoridae, paraves, therizinosauridae", NA,
 	"mantellisaurus", -130, -120, NA, NA,
-	"marginocephalia*", -165, -165, "ceratopsia, pachycephalosauria", NA,
+	"marginocephalia*", -165, -66, "ceratopsia, pachycephalosauria", NA,
 	"marsupalia", -66, 0, "diprotodontidae, thylacinidae, thylacoleonidae", NA,
 	"massospondylidae", -227, -176, "massospondylus", NA,
 	"massospondylus", -200, -183, NA, NA,
 	"megalosauridae", -170, -145, "megalosaurus, torvosaurus", NA,
-	"megalosauroidea*", -175, -175, "megalosauridae, spinosauridae", NA,
+	"megalosauroidea*", -175, -94, "megalosauridae, spinosauridae", NA,
 	"megalosaurus", -166, -165, NA, NA,
 	"megaraptor", -90, -88, NA, NA,
 	"megaraptora", -130, -66, "australovenator, fukuiraptor, megaraptor", NA,
 	"megatheriidae", -29, -0.008, "megatherium", NA,
 	"megatherium", -5, -0.01, NA, NA,
 	"mesosauria", -299, -270.6, NA, NA,
-	"metatheria", -125, -125, "marsupalia, sparassodonta, stagodontidae", NA,
+	"metatheria", -125, 0, "marsupalia, sparassodonta, stagodontidae", NA,
 	"metoposaurus", -227, -216.5, NA, NA,
 	"metriacanthosauridae", -174, -125, NA, "'moderately-spined lizards'",
 	"metriorhynchidae", -168, -125, "metriorhynchus, thalattosuchus", NA,
@@ -253,8 +253,8 @@ tree_data = tibble::tribble(
 	"moschops", -265, -260, NA, NA,
 	"multituberculata", -166, -40, NA, NA,
 	"mysticeti", -34, 0, NA, NA,
-	"neoaves", -62.5, -62.5, "phorusrhacidae", NA,
-	"neognathae", -72, -72, "galloanserae, neoaves", NA,
+	"neoaves", -62.5, 0, "phorusrhacidae", NA,
+	"neognathae", -72, 0, "galloanserae, neoaves", NA,
 	"neovenator", -130, -125, NA, NA,
 	"noasauridae", -164, -66, NA, NA,
 	"nodosauridae", -155, -66, "edmontonia, europelta, nodosaurus, polacanthus, sauropelta", NA,
@@ -264,9 +264,9 @@ tree_data = tibble::tribble(
 	"notosuchus", -85, -85, NA, NA,
 	"odontoceti", -33.9, 0, NA, NA,
 	"ophiacodontidae", -308, -273, NA, NA,
-	"ornithischia*", -235, -235, "heterodontosaurus, marginocephalia, ornithopoda, thyreophora", NA,
+	"ornithischia*", -235, -66, "heterodontosaurus, marginocephalia, ornithopoda, thyreophora", NA,
 	"ornithocheiridae", -140, -90, NA, NA,
-	"ornithocheiroidea", -145, -145, "anhangueridae, azhdarchidae, ornithocheiridae, pteranodontia", NA,
+	"ornithocheiroidea", -145, -66, "anhangueridae, azhdarchidae, ornithocheiridae, pteranodontia", NA,
 	"ornitholestes", -154, -154, NA, NA,
 	"ornithomimidae", -96, -66, "gallimimus, ornithomimus, struthiomimus", NA,
 	"ornithomimosauria", -140, -66, "deinocheiridae, ornithomimidae", NA,
@@ -281,14 +281,14 @@ tree_data = tibble::tribble(
 	"pachypleurosauria", -251, -227, NA, NA,
 	"pachyrhinosaurus", -73.5, -69, NA, NA,
 	"pakicetus", -50, -48, NA, NA,
-	"palaeognathae", -60, -60, "aepyornithiformes, apterygidae, casuariiformes, dinornithiformes, rheidae, struthionidae", NA,
+	"palaeognathae", -60, 0, "aepyornithiformes, apterygidae, casuariiformes, dinornithiformes, rheidae, struthionidae", NA,
 	"palaeoloxodon", -2.58, -0.0117, NA, NA,
-	"pantestudines", -240, -240, "testudinata", NA,
+	"pantestudines", -240, 0, "testudinata", NA,
 	"paraceratheriidae", -47, -23, "paraceratherium", NA,
 	"paraceratherium", -34, -23, NA, NA,
-	"parareptilia", -306, -306, "mesosauria, pareiasauria", NA,
+	"parareptilia", -306, -201.3, "mesosauria, pareiasauria", NA,
 	"parasaurolophus", -76.9, -73.5, NA, NA,
-	"paraves*", -167, -167, "avialae, deinonychosauria, scansoriopterygidae", NA,
+	"paraves*", -167, 0, "avialae, deinonychosauria, scansoriopterygidae", NA,
 	"pareiasauria", -265, -252, NA, NA,
 	"patagotitan", -101.62, -101.62, NA, NA,
 	# perissodactyla : Tapiridae, Rhinocerotidae
@@ -297,19 +297,19 @@ tree_data = tibble::tribble(
 	"phorusrhacidae", -43, -0.1, NA, "terror bids",
 	"phytosauria", -242, -201.4, "leptosuchus, smilosuchus", NA,
 	"pilosa", -55.8, 0, "megatheriidae", "sloths and anteaters",
-	"pistosauroidea", -251, -251, "pistosaurus, plesiosauria", NA,
+	"pistosauroidea", -251, -66, "pistosaurus, plesiosauria", NA,
 	"pistosaurus", -247.2, -237, NA, NA,
-	"placentalia*", -90, -90, "afrotheria, euarchontoglires, laurasiatheria, xenarthra", NA,
+	"placentalia*", -90, 0, "afrotheria, euarchontoglires, laurasiatheria, xenarthra", NA,
 	"placerias", -230, -215, NA, NA,
 	"placodontia", -245, -201.3, NA, NA,
 	"plateosaurus", -227, -204, NA, NA,
-	"plesiosauria*", -232, -232, "cryptoclididae, elasmosauridae, leptocleididae, plesiosauridae, pliosauridae", NA,
+	"plesiosauria*", -232, -66, "cryptoclididae, elasmosauridae, leptocleididae, plesiosauridae, pliosauridae", NA,
 	"plesiosauridae", -199.6, -174.7, NA, NA,
 	"pliosauridae", -228, -89.3, "attenborosaurus, kronosaurus, liopleurodon, pliosaurus", NA,
 	"pliosaurus", -155.7, -147, NA, NA,
 	"polacanthus", -130, -125, NA, NA,
 	"poposauridae", -237, -201.3, "poposaurus", "bipedal carnivores",
-	"poposauroidea", -248, -248, "ctenosauriscidae, lotosaurus, poposauridae, shuvosauridae", NA,
+	"poposauroidea", -248, -201.3, "ctenosauriscidae, lotosaurus, poposauridae, shuvosauridae", NA,
 	"poposaurus", -237, -216, NA, NA,
 	"postosuchus*", -237, -201.4, NA, NA,
 	"prestosuchidae", -247, -225, "prestosuchus, saurosuchus", NA,
@@ -319,16 +319,16 @@ tree_data = tibble::tribble(
 	"proboscidea", -60, 0, "deinotheriidae, elephantidae, gomphotheriidae, moeritherium, stegodon", NA,
 	"protoceratops", -75, -71, NA, NA,
 	# "protoceratopsidae", -75, -71, NA, NA,
-	"pseudosuchia", -248, -248, "aetosauria, batrachotomus, crocodylomorpha, gracilisuchidae, ornithosuchidae, phytosauria, poposauroidea, prestosuchidae, rauisuchia", NA,
+	"pseudosuchia", -248, 0, "aetosauria, batrachotomus, crocodylomorpha, gracilisuchidae, ornithosuchidae, phytosauria, poposauroidea, prestosuchidae, rauisuchia", NA,
 	"psittacosaurus", -125, -105, NA, NA,
 	"pteranodontia", -92, -66, NA, NA,
-	"pterodactyloidea", -162.7, -162.7, "ornithocheiroidea, pterodactylus", NA,
+	"pterodactyloidea", -162.7, -66, "ornithocheiroidea, pterodactylus", NA,
 	"pterodactylus", -150.8, -148.5, NA, "winged finger",
-	"pterosauria", -228, -228, "dimorphodontidae, pterodactyloidea, rhamphorhynchidae", NA,
+	"pterosauria", -228, -66, "dimorphodontidae, pterodactyloidea, rhamphorhynchidae", NA,
 	"pyroraptor", -72, -72, NA, NA,
 	"rauisuchia", -240, -200, "postosuchus, rauisuchus", NA,
 	"rauisuchus", -235, -228, NA, NA,
-	"reptiliomorpha", -340, -340, "amniota, diadectidae, seymouriamorpha", NA,
+	"reptiliomorpha", -340, 0, "amniota, diadectidae, seymouriamorpha", NA,
 	"rhamphorhynchidae", -182, -148.5, NA, NA,
 	"rheidae", -56, 0, NA, NA,
 	"rhynchocephalia", -240, 0, NA, NA,
@@ -339,12 +339,12 @@ tree_data = tibble::tribble(
 	"saltasaurus", -70, -68, NA, NA,
 	"sarcosuchus", -133, -112, NA, NA,
 	"sauria", -265.8, 0, "archelosauria, lepidosauromorpha", NA,
-	"saurischia*", -237, -237, "sauropodomorpha, theropoda", NA,
+	"saurischia*", -237, 0, "sauropodomorpha, theropoda", NA,
 	"sauropelta", -108.5, -108.5, NA, NA,
 	"sauropoda", -228, -66, "brachiosauridae, camarasaurus, cetiosauridae, diplodocidae, euhelopodidae, mamenchisauridae, titanosauria, vulcanodontidae", NA,
 	"sauropodomorpha*", -235, -66, "massospondylidae, plateosaurus, sauropoda, thecodontosaurus", NA,
-	"sauropsida", -311, -311, "eureptilia, parareptilia", NA,
-	"sauropterygia*", -255, -255, "nothosauroidea, pachypleurosauria, pistosauroidea, placodontia", NA,
+	"sauropsida", -311, 0, "eureptilia, parareptilia", NA,
+	"sauropterygia*", -255, -66, "nothosauroidea, pachypleurosauria, pistosauroidea, placodontia", NA,
 	"saurosuchus", -231.4, -225, NA, NA,
 	"scansoriopterygidae", -165, -156, "epidexipteryx, scansoriopteryx", "'climbing wings', China",
 	"scansoriopteryx", -165, -156, NA, NA,
@@ -363,16 +363,16 @@ tree_data = tibble::tribble(
 	"smilosuchus", -221.5, -205.6, NA, NA,
 	"sparassodonta", -66, -2.58, "borhyaenidae, thylacosmilidae", NA,
 	"sphenacodon", -300, -280, NA, "'wedge point tooth'",
-	"sphenacodontia", -304, -304, "sphenacodontidae, therapsida", NA,
+	"sphenacodontia", -304, 0, "sphenacodontidae, therapsida", NA,
 	"sphenacodontidae*", -302, -272, "dimetrodon, sphenacodon", NA,
 	"sphenosuchia", -228, -152, "sphenosuchus", NA,
 	"sphenosuchus", -195, -195, NA, NA,
-	"spinosauridae", -139, -139, "baryonyx, irritator, spinosaurus", NA,
+	"spinosauridae", -139, -94, "baryonyx, irritator, spinosaurus", NA,
 	"spinosaurus", -100, -94, NA, "'spine lizard', North Africa",
 	"squamata", -168, 0, "chamaeleonidae, gekkota, mosasauria, serpentes, varanidae", NA,
 	"stagodontidae", -92, -66, "didelphodon", NA,
 	"staurikosaurus", -233.23, -228, NA, NA,
-	"stegocephalia", -375, -375, "acanthostega, elginerpeton, ichthyostega, tiktaalik", NA,
+	"stegocephalia", -375, 0, "acanthostega, elginerpeton, ichthyostega, tiktaalik", 'CHECK THIS: MIGHT NEED TO INCLUDE TETRAPODA',
 	"stegodon", -11.6, -0.01, NA, NA,
 	"stegosauria", -169, -100.5, "dacentrurus, kentrosaurus, stegosaurus", NA,
 	"stegosaurus", -155, -145, NA, NA,
@@ -386,27 +386,27 @@ tree_data = tibble::tribble(
 	"tawa", -215, -215, NA, NA,
 	"teleosauridae", -183, -145, "teleosaurus", NA,
 	"teleosaurus", -171, -164, NA, NA,
-	"temnospondyli", -330, -330, "archegosauridae, eryops, lissamphibia, metoposaurus", NA,
+	"temnospondyli", -330, -120, "archegosauridae, eryops, lissamphibia, metoposaurus", NA,
 	"testudinata", -210, 0, NA, NA,
-	"tetanurae*", -201, -201, "carnosauria, coelurosauria, megalosauroidea", NA,
-	"tetrapoda", -370, -370, "lepospondyli, reptiliomorpha, temnospondyli", NA,
-	"tetrapodomorpha", -409, -409, "stegocephalia, tetrapoda", NA,
+	"tetanurae*", -201, 0, "carnosauria, coelurosauria, megalosauroidea", NA,
+	"tetrapoda", -370, 0, "lepospondyli, reptiliomorpha, temnospondyli", NA,
+	"tetrapodomorpha", -409, 0, "stegocephalia, tetrapoda", NA,
 	"thalattosauria", -247, -201.4, NA, NA,
 	"thalattosuchia", -201, -100, "metriorhynchidae, teleosauridae", NA,
 	"thalattosuchus", -166, -160, NA, NA,
 	"thecodontosaurus", -234, -234, NA, NA,
-	"therapsida*", -285, -285, "dicynodontia, dinocephalia, theriodontia", NA,
-	"theria*", -130, -130, "eutheria, metatheria", NA,
-	"theriodontia*", -275, -275, "cynodontia, gorgonopsia, therocephalia", NA,
+	"therapsida*", -285, 0, "dicynodontia, dinocephalia, theriodontia", NA,
+	"theria*", -130, 0, "eutheria, metatheria", NA,
+	"theriodontia*", -275, 0, "cynodontia, gorgonopsia, therocephalia", NA,
 	"therizinosauridae*", -100, -66, "therizinosaurus", NA,
 	"therizinosaurus", -70, -70, NA, NA,
 	"therocephalia", -266, -242, NA, "'beast head'",
-	"theropoda*", -236, -236, "ceratosauria, coelophysoidea, eodromaeus, eoraptor, herrerasauridae, tawa, tetanurae", NA,
+	"theropoda*", -236, 0, "ceratosauria, coelophysoidea, eodromaeus, eoraptor, herrerasauridae, tawa, tetanurae", NA,
 	"thylacinidae", -28, -8e-05, NA, NA,
 	"thylacoleonidae*", -27, -0.0117, NA, NA,
 	"thylacosmilidae", -21, -3, "thylacosmilus", NA,
 	"thylacosmilus", -9, -3, NA, NA,
-	"thyreophora", -201, -201, "ankylosauria, scelidosaurus, stegosauria", NA,
+	"thyreophora", -201, -66, "ankylosauria, scelidosaurus, stegosauria", NA,
 	"tiktaalik", -375, -375, NA, NA,
 	"titanosauria", -140, -66, "argentinosaurus, dreadnoughtus, patagotitan, saltasauridae", NA,
 	"torvosaurus", -165, -148, NA, NA,
@@ -426,23 +426,78 @@ tree_data = tibble::tribble(
 	"varanopidae", -309, -260, NA, NA,
 	"velociraptor", -75, -71, NA, NA,
 	"vulcanodontidae", -199, -175, NA, NA,
-	"xenarthra", -60, -60, "cingulata, pilosa", NA,
+	"xenarthra", -60, 0, "cingulata, pilosa", NA,
 	"yutyrannus", -125, -125, NA, NA,
 ) |>
 	dplyr::mutate(to = ifelse(is.na(.data$to), .data$from, .data$to)) |>
+	# dplyr::mutate(dplyr::across(c('from', 'to'), ~-abs(.x))) |>
+	# # mutate(children = children |> map_chr(function(x) stringr::str_to_lower(str_c(sort(x), collapse=', ')))) |>
+	# dplyr::mutate(dplyr::across(c('taxon', 'children'), stringr::str_to_lower)) |>
+	# dplyr::select(dplyr::one_of('taxon', 'from', 'to', 'children', 'notes')) |>
+	# dplyr::arrange(.data$taxon) |>
 	dplyr::mutate(dplyr::across(c('from', 'to'), ~-abs(.x))) |>
-	# mutate(children = children |> map_chr(function(x) stringr::str_to_lower(str_c(sort(x), collapse=', ')))) |>
 	dplyr::mutate(dplyr::across(c('taxon', 'children'), stringr::str_to_lower)) |>
-	dplyr::select(dplyr::one_of('taxon', 'from', 'to', 'children', 'notes')) |>
+	dplyr::mutate(asterisk = .data$taxon |> stringr::str_detect('\\*$')) |>
+	dplyr::mutate(taxon = .data$taxon |> stringr::str_remove('\\*$')) |>
+	dplyr::mutate(children = .data$children |> tidyr::replace_na('') |> strsplit(split='\\s*,\\s*')) |>
+	identity()
+
+df
+
+# add parent column
+df = dplyr::left_join(
+	df,
+	df |>
+		dplyr::select(parent='taxon', taxon='children') |>
+		tidyr::unnest('taxon'),
+	by='taxon'
+) |>
+	dplyr::select(dplyr::one_of('taxon', 'from', 'to', 'parent'),
+				  dplyr::everything())
+df
+
+# add indicator columns
+df = df |>
+	arboretum:::update_indicator_columns() |>
+	structure(class = c('tree_data', class(df))) |>
+	arboretum:::check_tree_data() |>
 	dplyr::arrange(.data$taxon)
 
-print(tree_data)
+print(df)
 
+df |> saveRDS('inst/extdata/tree_data.rds')
 # usethis::use_data(tree_data, overwrite = TRUE)
 
-tree_data |> write_tsv('inst/extdata/tree_data.tsv')
+df = df |>
+	dplyr::mutate(
+		children = .data$children |> purrr::map_chr(~paste(sort(unlist(.x)), collapse=', ')),
+		children = ifelse(.data$children == '', character(0), .data$children)
+	)
+
+print(df)
+df |> readr::write_tsv('inst/extdata/tree_data.tsv')
 
 
+# mbm <- microbenchmark::microbenchmark(
+# 	"tsv" = {
+# 		df <- readr::read_tsv(
+# 			'inst/extdata/tree_data.tsv',
+# 			col_types = readr::cols(
+# 				from = readr::col_double(),
+# 				to = readr::col_double(),
+# 				.default = readr::col_character()
+# 			)
+# 		)
+# 	},
+# 	"rds" = {
+# 		df <- readRDS('inst/extdata/tree_data.rds')
+# 	},
+# 	times=100
+# )
+#
+# mbm
+#
+# ggplot2::autoplot(mbm)
 
 # df[df$taxon %in% df$taxon[duplicated(str_remove(df$taxon, '\\*'))], ] |> print()
 

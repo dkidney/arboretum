@@ -55,7 +55,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 	# }
 
 	# message('tree data used for plotting:')
-	print(df)
+	# print(df)
 
 	# df = check_n_tips(df, max_tips)
 	if(get_n_tips(df) > max_tips) {
@@ -336,34 +336,6 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 			ggplot2::aes(xend=.data$to, yend=.data$y),
 			data=df |> get_tips()
 		) +
-		# ggplot2::geom_text(
-		# 	ggplot2::aes(x=(.data$from + .data$to) / 2, label=.data$taxon),
-		# 	data=df |> get_tips(),
-		# 	vjust=-0.5,
-		# 	size = textsize,
-		# ) +
-		ggplot2::geom_point(
-			data=df |> get_tips(),
-			size = pointsize,
-			col=get_tips(df)$asterisk |> dplyr::if_else('red', 'black'),
-		) +
-		ggplot2::geom_point(
-			ggplot2::aes(x=.data$to),
-			data=df |> get_tips() |> dplyr::filter(.data$to < 0),
-			size = pointsize,
-		) +
-		ggplot2::geom_point(
-			# ggplot2::aes(col=asterisk),
-			data=df |> get_nodes(),
-			size = pointsize,
-			col=get_nodes(df)$asterisk |> dplyr::if_else('red', 'black'),
-		) +
-		# ggplot2::geom_text(
-		# 	ggplot2::aes(label=.data$taxon),
-		# 	data=df |> get_nodes(),
-		# 	vjust=-0.5,
-		# 	size = textsize,
-		# ) +
 		ggplot2::geom_text(
 			ggplot2::aes(x=.data$label_x, label=.data$taxon),
 			vjust=-0.5,
@@ -380,7 +352,53 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 			axis.ticks.y = ggplot2::element_blank(),
 			legend.position = "none"
 		)
-
+	# nodes from (no asterisk)
+	tmp = df[!df$is_tip & !df$asterisk, ]
+	plt = plt +
+		ggplot2::geom_point(
+			data=tmp,
+			size=pointsize,
+		)
+	# nodes from (asterisk)
+	tmp = df[!df$is_tip & df$asterisk, ]
+	plt = plt +
+		ggplot2::geom_point(
+			data=tmp,
+			size=pointsize,
+			col='red',
+			shape=21,
+			fill=tmp$is_collapsed |> dplyr::if_else('white', 'red'),
+		)
+	# tips from (no asterisk)
+	tmp = df[df$is_tip & !df$asterisk, ]
+	plt = plt +
+		ggplot2::geom_point(
+			data=tmp,
+			size = pointsize,
+			col='black',
+			shape=21,
+			fill=tmp$is_collapsed |> dplyr::if_else('white', 'black'),
+		)
+	# tips from (asterisk)
+	tmp = df[df$is_tip & df$asterisk, ]
+	plt = plt +
+		ggplot2::geom_point(
+			data=tmp,
+			size = pointsize,
+			col='red',
+			shape=21,
+			fill=tmp$is_collapsed |> dplyr::if_else('white', 'red'),
+		)
+	# tips to (ignore extant)
+	tmp = df[df$is_tip, ] |> dplyr::filter(.data$to < 0)
+	if (nrow(tmp) > 0) {
+		plt = plt +
+			ggplot2::geom_point(
+				ggplot2::aes(x=.data$to),
+				data=tmp,
+				size = pointsize,
+			)
+	}
 
 	return(plt)
 }
@@ -422,7 +440,7 @@ get_parent_child_relationships = function(df) {
 }
 
 highlight_taxon = function(plt, taxon, col=1, alpha=0.25) {
-	temp = plt$data |> subset_taxon(taxon)
+	temp = plt$data |> subset(taxon)
 	plt +
 		ggplot2::annotate(
 			"rect",

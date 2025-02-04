@@ -8,6 +8,7 @@
 
 #' launch the app
 #' @param taxon TODO
+#' @param collapse TODO
 #' @export
 #' @import shiny
 tree_app_old <- function(taxon, collapse) {
