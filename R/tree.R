@@ -44,7 +44,7 @@ tree = function(taxon=NULL, collapse=NULL, max_tips=300, ...) {
 # get_default_collapsed = function(df, collapsable_taxa) {
 # taxa = collapsable_taxa
 
-plot_tree_data = function(df, max_tips=100, textsize=3) {
+plot_tree_data = function(df, max_tips=100, textsize=3, xmin=NULL, xmax=NULL) {
 
 	# convert collapsed taxa to tips - see commented out section in collapse_taxon
 	# browser()
@@ -63,40 +63,82 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 		return(NULL)
 	}
 
-	# label coordinates --------------------------------------------------------
+	# labels -------------------------------------------------------------------
 
-	df = df |>
-		dplyr::mutate(
-			label_x = dplyr::case_when(
-				.data$is_tip ~ (.data$from + .data$to) / 2,
-				.default = .data$from
-			))
+	# df = df |>
+	# 	dplyr::mutate(
+	# 		label = dplyr::case_when(
+	# 			.data$level == 'genus' ~ stringr::str_to_sentence(.data$taxon),
+	# 			.default=.data$taxon
+	# 		),
+	# 		label_x = dplyr::case_when(
+	# 			.data$is_tip ~ (.data$from + .data$to) / 2,
+	# 			.default = .data$from
+	# 		)
+	# 	)
+
+	# filter geotime ------------------------------------------------------------------
+
+	geotime = load_geotime()
+
+	# # filter periods to match tree data
+	# periods = geotime |>
+	# 	dplyr::filter(.data$to > min(df$from, na.rm = TRUE)) |>
+	# 	dplyr::select(.data$period) |>
+	# 	dplyr::distinct()
+	# geotime = geotime |>
+	# 	dplyr::inner_join(periods, by='period')
+
+	# # filter epochs to match tree data
+	# epochs = geotime |>
+	# 	dplyr::filter(.data$to > min(df$from, na.rm = TRUE)) |>
+	# 	dplyr::select(dplyr::one_of('period', 'epoch')) |>
+	# 	dplyr::distinct()
+	# geotime = geotime |>
+	# 	dplyr::inner_join(epochs, by=c('period', 'epoch'))
+
+	# filter epochs to match tree data
+	ages = geotime |>
+		dplyr::filter(.data$to > min(df$from, na.rm = TRUE)) |>
+		dplyr::select(dplyr::one_of('period', 'epoch', 'age')) |>
+		dplyr::distinct()
+	geotime = geotime |>
+		dplyr::inner_join(ages, by=c('period', 'epoch', 'age'))
+
+	geotime = split_geotime_by_timescale(geotime)
+
+	# zoom in ------------------------------------------------------------------
+
+	zoom = is.numeric(xmin) || is.numeric(xmax)
+
+	if (zoom) {
+		if (!is.numeric(xmin)) xmin = min(geotime$age$from)
+		if (!is.numeric(xmax)) xmax = max(geotime$age$from)
+		xmin = -abs(xmin)
+		xmax = -abs(xmax)
+		# browser()
+		# df |>
+		# 	dplyr::filter(taxon == 'mammaliamorpha') |>
+		# 	update_label_x(xmin=xmin, xmax=xmax)
+		df = df |> update_label_x(xmin=xmin, xmax=xmax)
+	}
 
 	# create plot obj ----------------------------------------------------------
 
 	plt = df |>
-		ggplot2::ggplot(ggplot2::aes(x=.data$from,
-									 y=.data$y))
+		ggplot2::ggplot(ggplot2::aes(x=.data$from, y=.data$y))
 
-	# geotime ------------------------------------------------------------------
+	if (zoom) {
+		plt = plt + ggplot2::coord_cartesian(xlim=c(xmin, xmax))
+	}
 
-	geotime = load_geotime()
-
-	# filter periods to match tree data
-	periods = geotime |>
-		dplyr::filter(.data$to > min(df$from, na.rm = TRUE)) |>
-		dplyr::select(.data$period) |>
-		dplyr::distinct()
-	geotime = geotime |>
-		dplyr::inner_join(periods, by='period')
+	# plot geotime ------------------------------------------------------------------
 
 	y_max = max(df$y, na.rm = TRUE)
 	y_min = min(df$y, na.rm = TRUE)
 
 	x_max = 0
-	x_min = min(geotime$from)
-
-	geotime = split_geotime_by_timescale(geotime)
+	x_min = min(geotime$age$from)
 
 	h = diff(range(df$y))
 	if (h == 0) h = 1
@@ -120,7 +162,16 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 	y_max_era    = y_min_period
 	y_min_era    = y_max_era - one_pc * 4
 
-	x_breaks = rev(seq(0, x_min, -20))
+	if (abs(x_min) > 250) {
+		step = 50
+	} else if (abs(x_min) > 100) {
+		step = 25
+	} else if (abs(x_min) > 50) {
+		step = 10
+	} else {
+		step = 5
+	}
+	x_breaks = rev(seq(0, x_min, -step))
 
 	y_expand_bottom = abs(y_min_era - y_min) / h
 	y_expand_top = (y_max_header - y_max) / h
@@ -289,7 +340,6 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 			hjust=0,
 		)
 
-
 	# events -------------------------------------------------------------------
 
 	events = load_events() |>
@@ -314,7 +364,6 @@ plot_tree_data = function(df, max_tips=100, textsize=3) {
 			# vjust = -0.5,
 			inherit.aes = FALSE
 		)
-
 
 	# relationships ------------------------------------------------------------
 

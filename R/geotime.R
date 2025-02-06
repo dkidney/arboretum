@@ -1,55 +1,35 @@
 load_geotime = function() {
-	period_fill = dplyr::tribble(
-		~period        , ~fill,
-		'quaternary'   , 'deeppink1',
-		'neogene'      , 'darkorchid1',
-		'paleogene'    , 'darkorange1',
-		'cretaceous'   , 'gold1',
-		'jurassic'     , 'steelblue1',
-		'triassic'     , 'tomato1',
-		'permian'      , 'darkorchid1',
-		'carboniferous', 'palegreen1',
-		'devonian'     , 'dodgerblue1',
-		'silurian'     , 'wheat1',
-		'ordovician'   , 'aquamarine',
-		'cambrian'     , 'tan1',
-	) |>
-		dplyr::mutate(dplyr::across('period',
-									stringr::str_to_sentence)) |>
-		truncate_geotime_labels()
-
-	readr::read_tsv(
-		system.file("extdata", "geotime.tsv", package="arboretum"),
-		col_types = readr::cols(
-			from = readr::col_double(),
-			to = readr::col_double(),
-			.default = readr::col_character()
-		)
-	) |>
-		dplyr::mutate(dplyr::across(c('period', 'epoch'),
-									stringr::str_to_sentence)) |>
-		truncate_geotime_labels() |>
-		dplyr::left_join(period_fill, by='period')
-}
-
-truncate_geotime_labels = function(df) {
-	if (!is.null(df[['period']])) {
-		df$period = df$period |>
-			stringr::str_replace('Quaternary', 'Q')
-	}
-	if (!is.null(df[['epoch']])) {
-		df$epoch = df$epoch |>
-			stringr::str_replace('Pliocene', 'Pl.') |>
-			stringr::str_replace('Pleistocene', 'Pl.') |>
-			stringr::str_replace('Holocene', '') |>
-			stringr::str_replace('ocene$', 'oc.') |>
-			stringr::str_replace('ian$', '.')
-	}
-	if (!is.null(df[['age']])) {
-		df$age = df$age |>
-			stringr::str_replace('ian$', '.')
-	}
-	return(df)
+	# period_fill = dplyr::tribble(
+	# 	~period        , ~fill,
+	# 	'quaternary'   , 'deeppink1',
+	# 	'neogene'      , 'darkorchid1',
+	# 	'paleogene'    , 'darkorange1',
+	# 	'cretaceous'   , 'gold1',
+	# 	'jurassic'     , 'steelblue1',
+	# 	'triassic'     , 'tomato1',
+	# 	'permian'      , 'darkorchid1',
+	# 	'carboniferous', 'palegreen1',
+	# 	'devonian'     , 'dodgerblue1',
+	# 	'silurian'     , 'wheat1',
+	# 	'ordovician'   , 'aquamarine',
+	# 	'cambrian'     , 'tan1',
+	# ) |>
+	# 	dplyr::mutate(dplyr::across('period', stringr::str_to_sentence)) |>
+	# 	truncate_geotime_labels()
+	#
+	# readr::read_tsv(
+	# 	system.file("extdata", "geotime.tsv", package="arboretum"),
+	# 	col_types = readr::cols(
+	# 		from = readr::col_double(),
+	# 		to = readr::col_double(),
+	# 		.default = readr::col_character()
+	# 	)
+	# ) |>
+	# 	dplyr::mutate(dplyr::across(c('period', 'epoch'),
+	# 								stringr::str_to_sentence)) |>
+	# 	truncate_geotime_labels() |>
+	# 	dplyr::left_join(period_fill, by='period')
+	readRDS(system.file("extdata", "geotime.rds", package="arboretum"))
 }
 
 split_geotime_by_timescale = function(geotime) {

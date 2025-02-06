@@ -2,7 +2,7 @@
 #' @param taxon TODO
 #' @import shiny
 #' @export
-tree_app <- function(taxon) {
+tree_app <- function(taxon='tetrapodomorpha') {
 
 	df = load_tree_data()
 	input_taxon_choices = df$taxon[!df$is_tip]
@@ -18,7 +18,8 @@ tree_app <- function(taxon) {
 				open = c(
 					"Configure tree",
 					"Taxon info",
-					"Plot settings",
+					# "Plot settings",
+					"Plot summary",
 					"About",
 					NA_character_
 				),
@@ -39,20 +40,21 @@ tree_app <- function(taxon) {
 					htmlOutput(outputId = 'info')
 				),
 				bslib::accordion_panel(
-					"Plot summary:",
+					"Plot summary",
 					verbatimTextOutput(outputId = 'summary'),
 				),
 				bslib::accordion_panel(
 					"Plot settings",
 					numericInput("height", "height", min = 100, max = 5000, value = 900, step=50),
 					numericInput("width", "width", min = 100, max = 5000, value = 1250, step=50),
+					numericInput("xmin", "xmin", min = 0, max = 538.8, value = NA, step=10),
+					numericInput("xmax", "xmax", min = 0, max = 538.8, value = 0, step=10),
 				),
 				bslib::accordion_panel(
 					"About",
-					textOutput(
-						# verbatimTextOutput(
-						outputId = 'about'
-					)
+					HTML('<a href="https://github.com/dkidney/arboretum/blob/main/README.md">Github homepage</a>'),
+					HTML("<br/>"),
+					textOutput(outputId = 'about'),
 				)
 			)
 		),
@@ -109,8 +111,24 @@ tree_app <- function(taxon) {
 			}
 		})
 
-		observeEvent(vals$df, {
-			vals$plot = plot_tree_data(vals$df)
+		# observeEvent(vals$df, {
+		# 	vals$plot = plot_tree_data(vals$df)
+		# })
+
+		# observeEvent(c(vals$df, input$xmin, input$xmax), {
+		# 	vals$plot = plot_tree_data(
+		# 		vals$df,
+		# 		xmin=input$xmin,
+		# 		xmax=input$xmax
+		# 	)
+		# })
+
+		observe({
+			vals$plot = plot_tree_data(
+				vals$df,
+				xmin=input$xmin,
+				xmax=input$xmax
+			)
 		})
 
 		output$plot <- renderPlot({
@@ -133,7 +151,9 @@ tree_app <- function(taxon) {
 			print(summary(vals$df))
 		})
 
-		output$about = renderText(paste("arboretum", utils::packageVersion('arboretum')))
+		output$about = renderText({
+			paste("arboretum", utils::packageVersion('arboretum'))
+		})
 
 	}
 

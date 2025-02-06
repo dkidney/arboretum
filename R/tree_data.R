@@ -142,11 +142,13 @@ get_info = function(df, taxon) {
 	i = df$taxon == taxon
 	notes = df$notes[i]
 	if (is.na(notes)) notes = character(0)
+	label = stringr::str_to_sentence(df$taxon[i])
+	if (!is.na(df$level[i])) label = paste0(label, ' (', df$level[i], ')')
 	paste0(
 		c(
-			df$taxon[i],
+			label,
 			paste0(abs(df$from[i]), '-', abs(df$to[i]), ' Ma'),
-			paste('clade:', df$parent[i]),
+			paste('clade:', stringr::str_to_sentence(df$parent[i])),
 			# paste0('children:\n- ', paste(df$children[i][[1]], collapse='\n- '))
 			notes
 		),
@@ -267,6 +269,8 @@ collapse = function(df, taxa=NULL) {
 
 	df = update_indicator_columns(df)
 
+	df = update_label_x(df)
+
 	# df$is_collapsed[df$taxon %in% c(get_descendants(df, taxa)$taxon, taxa)] = TRUE
 	# decendants_of_collapsed_taxa = get_descendants(df, taxa)$taxon
 	# df$is_collapsed[df$taxon %in% decendants_of_collapsed_taxa] = TRUE
@@ -275,6 +279,29 @@ collapse = function(df, taxa=NULL) {
 	# df |> dplyr::arrange(dplyr::desc(.data$plot), .data$taxon)
 
 	df
+}
+
+get_hierarchies = function(taxon){
+	df = load_tree_data()
+	hierarchies = stringr::str_to_lower(taxon)
+	for (i in 1:nrow(df)) { # i=1
+		parent = df$parent[df$taxon == hierarchies[i]]
+		if (is.na(parent)) break
+		hierarchies = c(hierarchies, parent)
+	}
+	hierarchies
+}
+
+update_label_x = function(df, xmin=NULL, xmax=NULL) {
+	xmin = if (is.numeric(xmin)) -abs(xmin) else df$from
+	xmax = if (is.numeric(xmax)) -abs(xmax) else df$to
+	df |>
+		dplyr::mutate(
+			label_x = dplyr::case_when(
+				.data$is_tip ~ (pmax(.data$from, xmin) + pmin(.data$to, xmax)) / 2,
+				.default = .data$from
+			)
+		)
 }
 
 # # given a list
@@ -544,7 +571,7 @@ check_tree_data = function(df) {
 	# check roots
 	roots = get_roots(df)
 	if (nrow(roots) > 1) {
-		warning('multiple roots: ', stringr::str_c(sort(roots$taxon), collapse = '\n'))
+		warning('multiple roots:\n- ', stringr::str_c(sort(roots$taxon), collapse = '\n- '))
 	}
 
 	invisible(df)

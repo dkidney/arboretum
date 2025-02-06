@@ -1,81 +1,82 @@
-era	period	epoch	age	from	to
-Cenozoic	Quaternary	Holocene	NA	-0.0117	0
-Cenozoic	Quaternary	Pleistocene	NA	-2.58	-0.0117
-Cenozoic	Neogene	Pliocene	NA	-5.333	-2.58
-Cenozoic	Neogene	Miocene	Messinian	-7.246	-5.333
-Cenozoic	Neogene	Miocene	Tortonian	-11.63	-7.246
-Cenozoic	Neogene	Miocene	Serravallian	-13.82	-11.63
-Cenozoic	Neogene	Miocene	Langhian	-15.97	-13.82
-Cenozoic	Neogene	Miocene	Burdigalian	-20.44	-15.97
-Cenozoic	Neogene	Miocene	Aquitanian	-23.03	-20.44
-Cenozoic	Paleogene	Oligocene	Chattian	-27.82	-23.03
-Cenozoic	Paleogene	Oligocene	Rupelian	-33.9	-27.82
-Cenozoic	Paleogene	Eocene	Priabonian	-37.71	-33.9
-Cenozoic	Paleogene	Eocene	Bartonian	-41.2	-37.71
-Cenozoic	Paleogene	Eocene	Lutetian	-47.8	-41.2
-Cenozoic	Paleogene	Eocene	Ypresian	-56	-47.8
-Cenozoic	Paleogene	Paleocene	Thanetian	-59.2	-56
-Cenozoic	Paleogene	Paleocene	Selandian	-61.6	-59.2
-Cenozoic	Paleogene	Paleocene	Danian	-66	-61.6
-Mesozoic	Cretaceous	Late	Maastrichtian	-72.1	-66
-Mesozoic	Cretaceous	Late	Campanian	-83.6	-72.1
-Mesozoic	Cretaceous	Late	Santonian	-86.3	-83.6
-Mesozoic	Cretaceous	Late	Coniacian	-89.8	-86.3
-Mesozoic	Cretaceous	Late	Turonian	-93.9	-89.8
-Mesozoic	Cretaceous	Late	Cenomanian	-100.5	-93.9
-Mesozoic	Cretaceous	Early	Albian	-113	-100.5
-Mesozoic	Cretaceous	Early	Aptian	-121.4	-113
-Mesozoic	Cretaceous	Early	Barremian	-125.77	-121.4
-Mesozoic	Cretaceous	Early	Hauterivian	-132.6	-125.77
-Mesozoic	Cretaceous	Early	Valanginian	-139.8	-132.6
-Mesozoic	Cretaceous	Early	Berriasian	-145	-139.8
-Mesozoic	Jurassic	Late	Tithonian	-149.2	-145
-Mesozoic	Jurassic	Late	Kimmeridgian	-154.8	-149.2
-Mesozoic	Jurassic	Late	Oxfordian	-161.5	-154.8
-Mesozoic	Jurassic	Middle	Callovian	-165.3	-161.5
-Mesozoic	Jurassic	Middle	Bathonian	-168.2	-165.3
-Mesozoic	Jurassic	Middle	Bajocian	-170.9	-168.2
-Mesozoic	Jurassic	Middle	Aalenian	-174.7	-170.9
-Mesozoic	Jurassic	Early	Toarcian	-184.2	-174.7
-Mesozoic	Jurassic	Early	Pliensbachian	-192.9	-184.2
-Mesozoic	Jurassic	Early	Sinemurian	-199.5	-192.9
-Mesozoic	Jurassic	Early	Hettangian	-201.3	-199.5
-Mesozoic	Triassic	Late	Rhaetian	-205.7	-201.3
-Mesozoic	Triassic	Late	Norian	-227	-205.7
-Mesozoic	Triassic	Late	Carnian	-237	-227
-Mesozoic	Triassic	Middle	Ladinian	-242	-237
-Mesozoic	Triassic	Middle	Anisian	-247.2	-242
-Mesozoic	Triassic	Early	Olenekian	-251.2	-247.2
-Mesozoic	Triassic	Early	Induan	-251.902	-251.2
-Paleozoic	Permian	Lopingian	Changhsingian	-254.14	-251.902
-Paleozoic	Permian	Lopingian	Wuchiapingian	-259.51	-254.14
-Paleozoic	Permian	Guadalupian	Capitanian	-264.28	-259.51
-Paleozoic	Permian	Guadalupian	Wordian	-266.9	-264.28
-Paleozoic	Permian	Guadalupian	Roadian	-273.01	-266.9
-Paleozoic	Permian	Cisuralian	Kungurian	-283.5	-273.01
-Paleozoic	Permian	Cisuralian	Artinskian	-290.1	-283.5
-Paleozoic	Permian	Cisuralian	Sakmarian	-293.52	-290.1
-Paleozoic	Permian	Cisuralian	Asselian	-298.9	-293.52
-Paleozoic	Carboniferous	Pennsylvanian	Gzhelian	-303.7	-298.9
-Paleozoic	Carboniferous	Pennsylvanian	Kasimovian	-307	-303.7
-Paleozoic	Carboniferous	Pennsylvanian	Moscovian	-315.2	-307
-Paleozoic	Carboniferous	Pennsylvanian	Bashkirian	-323.2	-315.2
-Paleozoic	Carboniferous	Mississippian	Serpukhovian	-330.9	-323.2
-Paleozoic	Carboniferous	Mississippian	Viséan	-346.7	-330.9
-Paleozoic	Carboniferous	Mississippian	Tournaisian	-358.9	-346.7
-Paleozoic	Devonian	Late	Famennian	-371.1	-358.9
-Paleozoic	Devonian	Late	Frasnian	-382.7	-371.1
-Paleozoic	Devonian	Middle	Givetian	-387.7	-382.7
-Paleozoic	Devonian	Middle	Eifelian	-393.3	-387.7
-Paleozoic	Devonian	Early	Emsian	-407.6	-393.3
-Paleozoic	Devonian	Early	Pragian	-410.8	-407.6
-Paleozoic	Devonian	Early	Lochkovian	-419.2	-410.8
-Paleozoic	Silurian	Pridoli	NA	-423	-419.2
-Paleozoic	Silurian	Ludlow	Ludfordian	-425.6	-423
-Paleozoic	Silurian	Ludlow	Gorstian	-427.4	-425.6
-Paleozoic	Silurian	Wenlock	Homerian	-430.5	-427.4
-Paleozoic	Silurian	Wenlock	Sheinwoodian	-433.4	-430.5
-Paleozoic	Silurian	Llandovery	Telychian	-438.5	-433.4
-Paleozoic	Silurian	Llandovery	Aeronian	-440.8	-438.5
-Paleozoic	Silurian	Llandovery	Rhuddanian	-443.8	-440.8
-Paleozoic	Ordovician	NA	NA	-486.85	-443.8
+era	period	epoch	age	from	to	fill
+Cenozoic	Q		NA	-0.0117	0	deeppink1
+Cenozoic	Q	Pl.	NA	-2.58	-0.0117	deeppink1
+Cenozoic	Neogene	Pl.	NA	-5.333	-2.58	darkorchid1
+Cenozoic	Neogene	Mioc.	Messin.	-7.246	-5.333	darkorchid1
+Cenozoic	Neogene	Mioc.	Torton.	-11.63	-7.246	darkorchid1
+Cenozoic	Neogene	Mioc.	Serravall.	-13.82	-11.63	darkorchid1
+Cenozoic	Neogene	Mioc.	Langh.	-15.97	-13.82	darkorchid1
+Cenozoic	Neogene	Mioc.	Burdigal.	-20.44	-15.97	darkorchid1
+Cenozoic	Neogene	Mioc.	Aquitan.	-23.03	-20.44	darkorchid1
+Cenozoic	Paleogene	Oligoc.	Chatt.	-27.82	-23.03	darkorange1
+Cenozoic	Paleogene	Oligoc.	Rupel.	-33.9	-27.82	darkorange1
+Cenozoic	Paleogene	Eoc.	Priabon.	-37.71	-33.9	darkorange1
+Cenozoic	Paleogene	Eoc.	Barton.	-41.2	-37.71	darkorange1
+Cenozoic	Paleogene	Eoc.	Lutet.	-47.8	-41.2	darkorange1
+Cenozoic	Paleogene	Eoc.	Ypres.	-56	-47.8	darkorange1
+Cenozoic	Paleogene	Paleoc.	Thanet.	-59.2	-56	darkorange1
+Cenozoic	Paleogene	Paleoc.	Seland.	-61.6	-59.2	darkorange1
+Cenozoic	Paleogene	Paleoc.	Dan.	-66	-61.6	darkorange1
+Mesozoic	Cretaceous	Late	Maastricht.	-72.1	-66	gold1
+Mesozoic	Cretaceous	Late	Campan.	-83.6	-72.1	gold1
+Mesozoic	Cretaceous	Late	Santon.	-86.3	-83.6	gold1
+Mesozoic	Cretaceous	Late	Coniac.	-89.8	-86.3	gold1
+Mesozoic	Cretaceous	Late	Turon.	-93.9	-89.8	gold1
+Mesozoic	Cretaceous	Late	Cenoman.	-100.5	-93.9	gold1
+Mesozoic	Cretaceous	Early	Alb.	-113	-100.5	gold1
+Mesozoic	Cretaceous	Early	Apt.	-121.4	-113	gold1
+Mesozoic	Cretaceous	Early	Barrem.	-125.77	-121.4	gold1
+Mesozoic	Cretaceous	Early	Hauteriv.	-132.6	-125.77	gold1
+Mesozoic	Cretaceous	Early	Valangin.	-139.8	-132.6	gold1
+Mesozoic	Cretaceous	Early	Berrias.	-145	-139.8	gold1
+Mesozoic	Jurassic	Late	Tithon.	-149.2	-145	steelblue1
+Mesozoic	Jurassic	Late	Kimmeridg.	-154.8	-149.2	steelblue1
+Mesozoic	Jurassic	Late	Oxford.	-161.5	-154.8	steelblue1
+Mesozoic	Jurassic	Middle	Callov.	-165.3	-161.5	steelblue1
+Mesozoic	Jurassic	Middle	Bathon.	-168.2	-165.3	steelblue1
+Mesozoic	Jurassic	Middle	Bajoc.	-170.9	-168.2	steelblue1
+Mesozoic	Jurassic	Middle	Aalen.	-174.7	-170.9	steelblue1
+Mesozoic	Jurassic	Early	Toarc.	-184.2	-174.7	steelblue1
+Mesozoic	Jurassic	Early	Pliensbach.	-192.9	-184.2	steelblue1
+Mesozoic	Jurassic	Early	Sinemur.	-199.5	-192.9	steelblue1
+Mesozoic	Jurassic	Early	Hettang.	-201.3	-199.5	steelblue1
+Mesozoic	Triassic	Late	Rhaet.	-205.7	-201.3	tomato1
+Mesozoic	Triassic	Late	Nor.	-227	-205.7	tomato1
+Mesozoic	Triassic	Late	Carn.	-237	-227	tomato1
+Mesozoic	Triassic	Middle	Ladin.	-242	-237	tomato1
+Mesozoic	Triassic	Middle	Anis.	-247.2	-242	tomato1
+Mesozoic	Triassic	Early	Olenek.	-251.2	-247.2	tomato1
+Mesozoic	Triassic	Early	Induan	-251.902	-251.2	tomato1
+Paleozoic	Permian	Loping.	Changhsing.	-254.14	-251.902	darkorchid1
+Paleozoic	Permian	Loping.	Wuchiaping.	-259.51	-254.14	darkorchid1
+Paleozoic	Permian	Guadalup.	Capitan.	-264.28	-259.51	darkorchid1
+Paleozoic	Permian	Guadalup.	Word.	-266.9	-264.28	darkorchid1
+Paleozoic	Permian	Guadalup.	Road.	-273.01	-266.9	darkorchid1
+Paleozoic	Permian	Cisural.	Kungur.	-283.5	-273.01	darkorchid1
+Paleozoic	Permian	Cisural.	Artinsk.	-290.1	-283.5	darkorchid1
+Paleozoic	Permian	Cisural.	Sakmar.	-293.52	-290.1	darkorchid1
+Paleozoic	Permian	Cisural.	Assel.	-298.9	-293.52	darkorchid1
+Paleozoic	Carboniferous	Pennsylvan.	Gzhel.	-303.7	-298.9	palegreen1
+Paleozoic	Carboniferous	Pennsylvan.	Kasimov.	-307	-303.7	palegreen1
+Paleozoic	Carboniferous	Pennsylvan.	Moscov.	-315.2	-307	palegreen1
+Paleozoic	Carboniferous	Pennsylvan.	Bashkir.	-323.2	-315.2	palegreen1
+Paleozoic	Carboniferous	Mississipp.	Serpukhov.	-330.9	-323.2	palegreen1
+Paleozoic	Carboniferous	Mississipp.	Viséan	-346.7	-330.9	palegreen1
+Paleozoic	Carboniferous	Mississipp.	Tournais.	-358.9	-346.7	palegreen1
+Paleozoic	Devonian	Late	Famenn.	-371.1	-358.9	dodgerblue1
+Paleozoic	Devonian	Late	Frasn.	-382.7	-371.1	dodgerblue1
+Paleozoic	Devonian	Middle	Givet.	-387.7	-382.7	dodgerblue1
+Paleozoic	Devonian	Middle	Eifel.	-393.3	-387.7	dodgerblue1
+Paleozoic	Devonian	Early	Ems.	-407.6	-393.3	dodgerblue1
+Paleozoic	Devonian	Early	Prag.	-410.8	-407.6	dodgerblue1
+Paleozoic	Devonian	Early	Lochkov.	-419.2	-410.8	dodgerblue1
+Paleozoic	Silurian	Pridoli	NA	-423	-419.2	wheat1
+Paleozoic	Silurian	Ludlow	Ludford.	-425.6	-423	wheat1
+Paleozoic	Silurian	Ludlow	Gorst.	-427.4	-425.6	wheat1
+Paleozoic	Silurian	Wenlock	Homer.	-430.5	-427.4	wheat1
+Paleozoic	Silurian	Wenlock	Sheinwood.	-433.4	-430.5	wheat1
+Paleozoic	Silurian	Llandovery	Telych.	-438.5	-433.4	wheat1
+Paleozoic	Silurian	Llandovery	Aeron.	-440.8	-438.5	wheat1
+Paleozoic	Silurian	Llandovery	Rhuddan.	-443.8	-440.8	wheat1
+Paleozoic	Ordovician	NA	NA	-486.85	-443.8	aquamarine
+Paleozoic	Cambrian	NA	NA	-538.8	-486.85	tan1

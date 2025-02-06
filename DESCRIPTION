@@ -18,7 +18,6 @@ Imports:
     dplyr,
     ggplot2,
     purrr,
-    readr,
     shiny,
     stringr,
     tidyr,
