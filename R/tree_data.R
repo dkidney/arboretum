@@ -10,7 +10,7 @@ tree_data = function(taxon, collapse='default') {
 	load_tree_data() |>
 		subset(taxon) |>
 		collapse(collapse) |>
-		reorder() |>
+		reorder_tree_data() |>
 		identity()
 }
 
@@ -133,7 +133,7 @@ is_root = function(df, taxon) {
 	taxon %in% get_roots(df)$taxon
 }
 
-n_roots = function(df, taxon) {
+n_roots = function(df) {
 	nrow(get_roots(df))
 }
 
@@ -224,6 +224,7 @@ collapse = function(df, taxa=NULL) {
 	if (missing(taxa) || is.null(taxa) || (length(taxa) == 1 && is.na(taxa))) taxa = 'default'
 	if (length(taxa) == 1 && taxa == 'none') return(df)
 	node_taxa = get_nodes(df)$taxon
+	# if (length(taxa) == 1 && taxa == 'default' && get_n_tips(df) > 20){
 	if (length(taxa) == 1 && taxa == 'default'){
 		# taxa = get_default_collapsed(df)
 		taxa = node_taxa |> purrr::keep(stringr::str_detect, '(morpha|formes|oidea|ae)$')
@@ -269,7 +270,7 @@ collapse = function(df, taxa=NULL) {
 
 	df = update_indicator_columns(df)
 
-	df = update_label_x(df)
+	# df = update_label_x(df)
 
 	# df$is_collapsed[df$taxon %in% c(get_descendants(df, taxa)$taxon, taxa)] = TRUE
 	# decendants_of_collapsed_taxa = get_descendants(df, taxa)$taxon
@@ -281,28 +282,28 @@ collapse = function(df, taxa=NULL) {
 	df
 }
 
-get_hierarchies = function(taxon){
+get_hierarchy = function(taxon){
 	df = load_tree_data()
-	hierarchies = stringr::str_to_lower(taxon)
+	hierarchy = stringr::str_to_lower(taxon)
 	for (i in 1:nrow(df)) { # i=1
-		parent = df$parent[df$taxon == hierarchies[i]]
+		parent = df$parent[df$taxon == hierarchy[i]]
 		if (is.na(parent)) break
-		hierarchies = c(hierarchies, parent)
+		hierarchy = c(hierarchy, parent)
 	}
-	hierarchies
+	hierarchy
 }
 
-update_label_x = function(df, xmin=NULL, xmax=NULL) {
-	xmin = if (is.numeric(xmin)) -abs(xmin) else df$from
-	xmax = if (is.numeric(xmax)) -abs(xmax) else df$to
-	df |>
-		dplyr::mutate(
-			label_x = dplyr::case_when(
-				.data$is_tip ~ (pmax(.data$from, xmin) + pmin(.data$to, xmax)) / 2,
-				.default = .data$from
-			)
-		)
-}
+# update_label_x = function(df, xmin=NULL, xmax=NULL) {
+# 	xmin = if (is.numeric(xmin)) -abs(xmin) else df$from
+# 	xmax = if (is.numeric(xmax)) -abs(xmax) else df$to
+# 	df |>
+# 		dplyr::mutate(
+# 			label_x = dplyr::case_when(
+# 				.data$is_tip ~ (pmax(.data$from, xmin) + pmin(.data$to, xmax)) / 2,
+# 				.default = .data$from
+# 			)
+# 		)
+# }
 
 # # given a list
 # is_nested = function(df, taxa) {
@@ -337,7 +338,7 @@ update_label_x = function(df, xmin=NULL, xmax=NULL) {
 # 	# )
 # }
 
-reorder = function(df) { # df = plt$data ; print(df, n=Inf)
+reorder_tree_data = function(df) { # df = plt$data ; print(df, n=Inf)
 	# browser()
 	# collapsed = df |> dplyr::filter(.data$is_collapsed)
 	# df = df |> dplyr::filter(!.data$is_collapsed)
@@ -346,17 +347,19 @@ reorder = function(df) { # df = plt$data ; print(df, n=Inf)
 	for (i in 1:nrow(df)) { # i=44
 		ranks = integer(0)
 		taxon = df$taxon[i]
-		while (length(taxon) > 0) {
+		for (j in 1:nrow(df)) {
+		# while (length(taxon) > 0) {
 			# print(taxon)
 			# if (taxon == 'tetrapodomorpha') browser()
 			siblings = get_siblings(df, taxon)
 			rank = rank(siblings$from, ties.method='first')[siblings$taxon == taxon]
 			ranks = c(rank, ranks)
+			if (is_root(df, taxon)) break
 			taxon = get_parent(df, taxon)$taxon
 		}
 		df$ranks[[i]] = ranks
 	}
-	# browser()
+	# browser()S
 	# print(class(df))
 	max_depth = df$ranks |> purrr::map_int(length) |> max()
 	rank_taxa = stringr::str_c('rank', 1:max_depth)
@@ -374,7 +377,7 @@ reorder = function(df) { # df = plt$data ; print(df, n=Inf)
 		) |>
 		tidyr::unnest(.data$ranks) |>
 		dplyr::arrange(dplyr::across(dplyr::one_of(!!rank_taxa))) |>
-		dplyr::select(-dplyr::one_of(!!rank_taxa))	|>
+		dplyr::select(-dplyr::one_of(!!rank_taxa))|>
 		add_y() |>
 		# dplyr::bind_rows(collapsed) |>
 		identity()
@@ -498,15 +501,6 @@ get_descendants_taxa = function(df, taxa) {
 	# 	dplyr::distinct()
 }
 
-get_siblings = function(df, taxon) {
-	# check_valid_taxon(df, taxon)
-	parent = get_parent(df, taxon)
-	# if (nrow(parent) == 0) {
-	# 	return(parent)
-	# }
-	get_children(df, parent$taxon)
-}
-
 get_parent = function(df, taxon) {
 	check_valid_taxon(df, taxon)
 	# i = df$children |> purrr::map_lgl(~taxon %in% .x)
@@ -515,6 +509,15 @@ get_parent = function(df, taxon) {
 	i =
 		parent = df$parent[df$taxon == taxon]
 	df |> dplyr::filter(.data$taxon %in% !!parent)
+}
+
+get_siblings = function(df, taxon) {
+	# check_valid_taxon(df, taxon)
+	if (is_root(df, taxon)) {
+		return(get_roots(df))
+	}
+	parent = get_parent(df, taxon)
+	get_children(df, parent$taxon)
 }
 
 # is_root = function(df, taxon) {
@@ -629,7 +632,16 @@ add_y = function(df) {
 	# )
 	df$y = NA_integer_
 	i = df$is_node
-	df$y[df$is_tip] = 1:sum(df$is_tip)
+
+	# browser()
+
+	n_tips = get_n_tips(df)
+	df$y[df$is_tip] = 1:n_tips
+
+	# new_ymin = 1 / n_tips
+	# new_ymax = 1 - 1 / n_tips
+	df$y = df$y |> rescale(0, 1)
+
 
 	# df = df |>
 	# 	dplyr::group_by(is_node) |>
@@ -651,11 +663,13 @@ add_y = function(df) {
 			df$y[i] = mean(children_ys)
 		}
 	}
+
 	# browser()
 	df |>
 		# dplyr::select(.data$y, dplyr::everything()) |>
 		# dplyr::arrange(desc(is_tip), desc(y)) |>
-		dplyr::arrange(dplyr::desc(.data$y))
+		dplyr::arrange(dplyr::desc(.data$y)) |>
+		rescale_y()
 }
 
 # don't export this yet

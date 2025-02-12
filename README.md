@@ -10,12 +10,12 @@ Plot customised phylogentic trees.
 
 ## Installation
 
-You can install the development version of arboretum from
-[GitHub](https://github.com/) with:
+You can install the latest version from [GitHub](https://github.com/)
+with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("dkidney/arboretum")
+if (!requireNamespace("devtools")) install.packages('devtools')
+devtools::install_github("dkidney/arboretum", ref="main")
 ```
 
 ## Examples
@@ -25,7 +25,7 @@ Load the package (and check the version)
 ``` r
 library(arboretum)
 packageVersion("arboretum")
-#> [1] '0.0.0.9000'
+#> [1] '0.2.0.9000'
 ```
 
 Plot the default tree. By default, any branch node ending in ‘-ae’,

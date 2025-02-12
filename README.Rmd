@@ -23,11 +23,11 @@ Plot customised phylogentic trees.
 
 ## Installation
 
-You can install the development version of arboretum from [GitHub](https://github.com/) with:
+You can install the latest version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("dkidney/arboretum")
+if (!requireNamespace("devtools")) install.packages('devtools')
+devtools::install_github("dkidney/arboretum", ref="main")
 ```
 
 ## Examples

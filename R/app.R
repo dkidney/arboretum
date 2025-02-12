@@ -2,29 +2,107 @@
 #' @param taxon TODO
 #' @import shiny
 #' @export
-tree_app <- function(taxon='tetrapodomorpha') {
-
+tree_app <- function(taxon='tetrapodomorpha', collapse=NULL, ...) {
+	#
 	df = load_tree_data()
 	input_taxon_choices = df$taxon[!df$is_tip]
 	input_taxon_selected = if (missing(taxon)) df$taxon[df$is_root] else taxon
 
+	xmin = if(exists('xmin')) xmin else NA
+	xmax = if(exists('xmax')) xmax else NA
+
+	df = tree_data(taxon=taxon, collapse=collapse)
+
+	# ui <- bslib::page_navbar(
+	# 	# theme = bslib::bs_theme(bootswatch = "cerulean"), # baby blue
+	# 	# theme = bslib::bs_theme(bootswatch = "cosmo"), # light sky blue
+	# 	# theme = bslib::bs_theme(bootswatch = "flatly"), # grey
+	# 	theme = bslib::bs_theme(bootswatch = "spacelab"), # grey blue
+	# 	# theme = bslib::bs_theme(bootswatch = "yeti"), # baby blue with a hint of green?
+	# 	# theme = bslib::bs_theme(bootswatch = "zephyr"), # light sky blue
+	# 	# theme = bslib::bs_theme(version = 5), # bootstrap
+	# 	title = paste("arboretum", utils::packageVersion('arboretum')),
+	# 	# navbar_options = bslib::navbar_options(
+	# 		# 	# position = c("static-top", "fixed-top", "fixed-bottom"),
+	# 		# bg = "#2D89C8",
+	# 		# 	# theme = c("auto", "light", "dark"),
+	# 		# collapsible = TRUE,
+	# 		# 	inverse = TRUE,
+	# 		# 	underline = TRUE
+	# 	# ),
+	# 	bslib::nav_panel(
+	# 		title = "Descendants",
+	# 		# icon = icon('seedling'),
+	# 		# icon = icon('diagram-project'),
+	# 		# icon = icon('tree'),
+	# 		icon = icon('tree-conifer', lib="glyphicon"),
+	# 		bslib::layout_sidebar(
+	# 			sidebar = bslib::sidebar(
+	# 				bslib::accordion_panel(
+	# 					"Plot settings",
+	# 					icon = icon('settings'),
+	# 					numericInput("height", "height", min = 100, max = 5000, value = 900, step=50),
+	# 					numericInput("width", "width", min = 100, max = 5000, value = 1250, step=50),
+	# 					numericInput("xmin", "xmin", min = 0, max = 538.8, value = NA, step=10),
+	# 					numericInput("xmax", "xmax", min = 0, max = 538.8, value = 0, step=10),
+	# 				)
+	# 			),
+	# 			p("First page content.")
+	# 		),
+	# 	),
+	# 	bslib::nav_panel(
+	# 		title = "Ancestry",
+	# 		# icon = icon('leaf'),
+	# 		icon = icon('tree-deciduous', lib="glyphicon"),
+	# 		# icon = icon('timeline'),
+	# 		# icon = icon('person-cane'),
+	# 		p("Second page content.")
+	# 	),
+	# 	bslib::nav_spacer(),
+	# 	bslib::nav_item(
+	# 		a(
+	# 			href="https://github.com/dkidney/arboretum/blob/main/README.md",
+	# 			icon('github', style="font-size: 30px")
+	# 		)
+	# 	)
+	# 	# bslib::nav_menu(
+	# 	# 	title = "Links",
+	# 	# 	align = "right",
+	# 	# bslib::nav_item(tags$a("Posit", href = "https://posit.co")),
+	# 	# 	bslib::nav_item(tags$a("Shiny", href = "https://shiny.posit.co"))
+	# 	# )
+	# )
+	# ui <- bslib::page_sidebar(
 	ui <- bslib::page_sidebar(
-		theme = bslib::bs_theme(bootswatch = "spacelab"),
+
+		width = 200,
+
+		# theme = bslib::bs_theme(bootswatch = "cerulean"), # baby blue
+		# theme = bslib::bs_theme(bootswatch = "cosmo"), # light sky blue
+		# theme = bslib::bs_theme(bootswatch = "flatly"), # grey
+		# theme = bslib::bs_theme(bootswatch = "spacelab"), # grey blue
+		# theme = bslib::bs_theme(bootswatch = "yeti"), # baby blue with a hint of green?
+		# theme = bslib::bs_theme(bootswatch = "zephyr"), # light sky blue
+		theme = bslib::bs_theme(bootswatch = "sandstone"),
+		# theme = bslib::bs_theme(version = 5), # bootstrap
 
 		# title = paste("arboretum", utils::packageVersion('arboretum')),
+		# title = a(paste("arboretum", utils::packageVersion('arboretum')),
+		# 		  style="font-size: 20px"),
+		# href="https://github.com/dkidney/arboretum/blob/main/README.md"),
 
 		sidebar = bslib::sidebar(
 			bslib::accordion(
 				open = c(
 					"Configure tree",
 					"Taxon info",
-					# "Plot settings",
-					"Plot summary",
+					"Tree summary",
 					"About",
 					NA_character_
 				),
 				bslib::accordion_panel(
 					"Configure tree",
+					icon = icon('leaf'),
 					selectInput(
 						inputId = 'taxon',
 						label = 'taxon:',
@@ -33,29 +111,40 @@ tree_app <- function(taxon='tetrapodomorpha') {
 					),
 					actionButton('expand', 'expand all'),
 					HTML("<br/>"),
-					actionButton('collapse', 'collapse default')
+					actionButton('collapse', 'collapse default'),
+					numericInput("xmin", "xmin", min = -550, max = 0, value = xmin, step=5),
+					numericInput("xmax", "xmax", min = -550, max = 0, value = xmax, step=5)
 				),
 				bslib::accordion_panel(
 					"Taxon info",
+					icon = icon('circle-info'),
 					htmlOutput(outputId = 'info')
 				),
 				bslib::accordion_panel(
-					"Plot summary",
+					"Tree summary",
+					icon = icon('list'),
 					verbatimTextOutput(outputId = 'summary'),
 				),
 				bslib::accordion_panel(
-					"Plot settings",
-					numericInput("height", "height", min = 100, max = 5000, value = 900, step=50),
+					"Figure settings",
+					icon = icon('cog'),
+					numericInput("height", "height", min = 100, max = 5000, value = 850, step=50),
 					numericInput("width", "width", min = 100, max = 5000, value = 1250, step=50),
-					numericInput("xmin", "xmin", min = 0, max = 538.8, value = NA, step=10),
-					numericInput("xmax", "xmax", min = 0, max = 538.8, value = 0, step=10),
 				),
 				bslib::accordion_panel(
 					"About",
-					HTML('<a href="https://github.com/dkidney/arboretum/blob/main/README.md">Github homepage</a>'),
-					HTML("<br/>"),
-					textOutput(outputId = 'about'),
-				)
+					a(
+						href="https://github.com/dkidney/arboretum/blob/main/README.md",
+						icon('github', style="font-size: 30px")
+					)
+				),
+				# HTML("<br/>"),
+				# br(),
+				# # em('asfddasf'),
+				# a(
+				# 	href="https://github.com/dkidney/arboretum/blob/main/README.md",
+				# 	icon('github', style="font-size: 30px")
+				# )
 			)
 		),
 
@@ -69,17 +158,33 @@ tree_app <- function(taxon='tetrapodomorpha') {
 
 	server <- function(input, output, session) {
 
+		# bslib::bs_themer()
+
 		# thematic::thematic_shiny()
 
 		vals = reactiveValues()
 
-		observeEvent(c(input$taxon, input$collapse), {
+		observeEvent(input$taxon, {
+			vals$df = tree_data(taxon=input$taxon, collapse = 'default')
+			updateNumericInput(inputId = 'xmin', value=NA)
+			updateNumericInput(inputId = 'xmax', value=NA)
+		})
+
+		observeEvent(input$collapse, {
 			vals$df = tree_data(taxon=input$taxon, collapse = 'default')
 		})
 
 		observeEvent(input$expand, {
 			vals$df = tree_data(taxon=input$taxon, collapse = 'none')
 		})
+
+		# observeEvent(input$xmin, {
+		# 	vals$xmin = input$xmin
+		# })
+		#
+		# observeEvent(input$xmax, {
+		# 	vals$xmin = input$xmax
+		# })
 
 		# collapse
 		observeEvent(input$plot_click, {
@@ -111,19 +216,8 @@ tree_app <- function(taxon='tetrapodomorpha') {
 			}
 		})
 
-		# observeEvent(vals$df, {
-		# 	vals$plot = plot_tree_data(vals$df)
-		# })
-
-		# observeEvent(c(vals$df, input$xmin, input$xmax), {
-		# 	vals$plot = plot_tree_data(
-		# 		vals$df,
-		# 		xmin=input$xmin,
-		# 		xmax=input$xmax
-		# 	)
-		# })
-
 		observe({
+			req(vals$df)
 			vals$plot = plot_tree_data(
 				vals$df,
 				xmin=input$xmin,
@@ -132,6 +226,7 @@ tree_app <- function(taxon='tetrapodomorpha') {
 		})
 
 		output$plot <- renderPlot({
+			req(vals$plot)
 			vals$plot
 		},
 		width = function() input$width,
@@ -141,6 +236,7 @@ tree_app <- function(taxon='tetrapodomorpha') {
 
 		output$info <- renderUI(HTML({
 			req(input$plot_hover)
+			req(vals$plot)
 			df = isolate(vals$plot$data)
 			taxon = closest_taxon(df, input$plot_hover)
 			get_info(df, taxon) |> stringr::str_replace_all("\n", "<br/>")
@@ -149,10 +245,6 @@ tree_app <- function(taxon='tetrapodomorpha') {
 		output$summary <- renderText({
 			req(vals$df)
 			print(summary(vals$df))
-		})
-
-		output$about = renderText({
-			paste("arboretum", utils::packageVersion('arboretum'))
 		})
 
 	}
