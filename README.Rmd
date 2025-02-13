@@ -9,7 +9,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%",
+  fig.width = 3,
+  # fig.height = 3,
+  dpi = 300,
+  # out.width = "100%",
   message = FALSE
 )
 ```
@@ -47,51 +50,45 @@ knitr::opts_chunk$set(
 )
 ```
 
-Plot the default tree. By default, any branch node ending in '-ae', '-morpha' or '-formes' will be collapsed.
+Plot a tree for a specific using the `taxon` argument. 
+
+By default, any branch node ending in '-morpha', '-formes', '-oidea', '-idae', '-inae', '-ini' or '-ina' will be collapsed, unless you use the `collapse` argument to specify which taxa you wish to collapse.
+
+Here are some examples.
 
 ```{r}
-tree()
+tree('tetrapodomorpha')
 ```
 
-Use the `taxon` argument to create a tree for a specific taxon, using the default rule for collapsing branches.
+***
 
 ```{r}
- tree(taxon = 'dinosauria')
+tree('reptiliomorpha', collapse=c('diapsida', 'therapsida'), xmin=-345, xmax=-252)
 ```
 
-Use the `collapse` argument to choose which branches in the tree are collapsed.
+***
 
 ```{r}
-tree(taxon = 'dinosauria',
-	 collapse = c('sauropodomorpha',
-	 			 'ornithopoda',
-	 			 'theropoda',
-	 			 'ankylosauria',
-	 			 'stegosauria',
-	 			 'pachycephalosauria',
-	 			 'ceratopsia'))
+tree('therapsida', xmax=-200)
 ```
 
-Use `collapse='none'` to see all available branches.
+***
 
 ```{r}
-tree(taxon='sauropoda', collapse='none')
+tree('ornithischia', collapse='none')
 ```
 
-Other example trees:
-
-```{r}
-tree('tetanurae', collapse='avialae')
-```
+***
 
 ```{r}
-tree('sauropterygia', collapse='none')
+tree('sauropoda', collapse='none')
 ```
 
-```{r}
-tree('synapsida')
-```
+***
 
 ```{r}
-tree('pseudosuchia', collapse='none')
+tree('tyrannosauroidea', collapse='avialae', xmin=-173)
 ```
+
+
+

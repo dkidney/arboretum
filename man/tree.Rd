@@ -20,19 +20,10 @@ plot tree data
 }
 \examples{
 library(arboretum)
-tree()
-tree('dinosauria')
-tree('dinosauria',
-	 collapse = c('sauropodomorpha',
-	 			 'ornithopoda',
-	 			 'theropoda',
-	 			 'ankylosauria',
-	 			 'stegosauria',
-	 			 'pachycephalosauria',
-	 			 'ceratopsia'))
+tree('tetrapodomorpha')
+tree('reptiliomorpha', collapse=c('diapsida', 'therapsida'), xmin=-345, xmax=-252)
+tree('therapsida', xmax=-200)
 tree('ornithischia', collapse='none')
 tree('sauropoda', collapse='none')
-tree('tetanurae', collapse='avialae')
-tree('sauropterygia', collapse='none')
-tree('synapsida')
+tree('tyrannosauroidea', collapse='avialae', xmin=-173)
 }

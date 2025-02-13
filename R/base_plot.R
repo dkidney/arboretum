@@ -49,7 +49,7 @@ base_plot = function(df, textsize=3) {
 
 	buffer = 0.05
 	ys = -buffer # lower limit of main plotting area
-	ys = c(ys, ys[1] - 0.08) # height of age label boxes
+	ys = c(ys, ys[1] - 0.09) # height of age label boxes
 	ys = c(ys, ys[2] - 0.03) # height of epoch label boxes
 	ys = c(ys, ys[3] - 0.04) # height of period label boxes
 	ys = c(ys, ys[4] - 0.04) # height of era label boxes

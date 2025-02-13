@@ -106,7 +106,7 @@ print.summary_tree_data = function(x, ...) {
 
 	x = paste(roots, nodes, tips, collapsed, sep='\n')
 
-	cat(x)
+	cat(x, '\n')
 
 	invisible(x)
 
@@ -219,7 +219,7 @@ update_indicator_columns = function(df) {
 		dplyr::mutate(is_node = !.data$is_root & !.data$is_tip)
 }
 
-collapse = function(df, taxa=NULL) {
+collapse = function(df, taxa=NULL, max_tips=100) {
 	# browser()
 	if (missing(taxa) || is.null(taxa) || (length(taxa) == 1 && is.na(taxa))) taxa = 'default'
 	if (length(taxa) == 1 && taxa == 'none') return(df)
@@ -267,6 +267,11 @@ collapse = function(df, taxa=NULL) {
 	df = df[!df$taxon %in% descendants$taxon,]
 	df$children[df$taxon %in% taxa] = list(character(0))
 	df$is_collapsed[df$taxon %in% taxa] = TRUE
+
+	n_tips = get_n_tips(df)
+	if(n_tips > max_tips) {
+		stop('number of tips (', n_tips, ') exceeds max_tips (', max_tips, ')')
+	}
 
 	df = update_indicator_columns(df)
 

@@ -28,70 +28,97 @@ packageVersion("arboretum")
 #> [1] '0.2.0.9000'
 ```
 
-Plot the default tree. By default, any branch node ending in ‘-ae’,
-‘-morpha’ or ‘-formes’ will be collapsed.
+Plot a tree for a specific using the `taxon` argument.
+
+By default, any branch node ending in ‘-morpha’, ‘-formes’, ‘-oidea’,
+‘-idae’, ‘-inae’, ‘-ini’ or ‘-ina’ will be collapsed, unless you use the
+`collapse` argument to specify which taxa you wish to collapse.
+
+Here are some examples.
 
 ``` r
-tree()
+tree('tetrapodomorpha')
+#> 1 root: tetrapodomorpha
+#> 5 nodes
+#> 16 tips
+#> 2 collapsed:
+#> - archegosauridae
+#> - reptiliomorpha
+#> Warning: Removed 2 rows containing missing values or values outside the scale range
+#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
-Use the `taxon` argument to create a tree for a specific taxon, using
-the default rule for collapsing branches.
+------------------------------------------------------------------------
 
 ``` r
- tree(taxon = 'dinosauria')
+tree('reptiliomorpha', collapse=c('diapsida', 'therapsida'), xmin=-345, xmax=-252)
+#> 1 root: reptiliomorpha
+#> 12 nodes
+#> 15 tips
+#> 2 collapsed:
+#> - diapsida
+#> - therapsida
+#> Warning: Removed 2 rows containing missing values or values outside the scale range
+#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-Use the `collapse` argument to choose which branches in the tree are
-collapsed.
+------------------------------------------------------------------------
 
 ``` r
-tree(taxon = 'dinosauria',
-     collapse = c('sauropodomorpha',
-                 'ornithopoda',
-                 'theropoda',
-                 'ankylosauria',
-                 'stegosauria',
-                 'pachycephalosauria',
-                 'ceratopsia'))
+tree('therapsida', xmax=-200)
+#> 1 root: therapsida
+#> 6 nodes
+#> 18 tips
+#> 1 collapsed:
+#> - mammaliamorpha
+#> Warning: Removed 2 rows containing missing values or values outside the scale range
+#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
-Use `collapse='none'` to see all available branches.
+------------------------------------------------------------------------
 
 ``` r
-tree(taxon='sauropoda', collapse='none')
+tree('ornithischia', collapse='none')
+#> 1 root: ornithischia
+#> 12 nodes
+#> 40 tips
+#> 0 collapsed
+#> Warning: Removed 2 rows containing missing values or values outside the scale range
+#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
-Other example trees:
+------------------------------------------------------------------------
 
 ``` r
-tree('tetanurae', collapse='avialae')
+tree('sauropoda', collapse='none')
+#> 1 root: sauropoda
+#> 6 nodes
+#> 18 tips
+#> 0 collapsed
+#> Warning: Removed 2 rows containing missing values or values outside the scale range
+#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
+------------------------------------------------------------------------
+
 ``` r
-tree('sauropterygia', collapse='none')
+tree('tyrannosauroidea', collapse='avialae', xmin=-173)
+#> 1 root: tyrannosauroidea
+#> 3 nodes
+#> 18 tips
+#> 0 collapsed
+#> Warning: Removed 2 rows containing missing values or values outside the scale range
+#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
-
-``` r
-tree('synapsida')
-```
-
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
-
-``` r
-tree('pseudosuchia', collapse='none')
-```
-
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />

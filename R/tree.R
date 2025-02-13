@@ -6,29 +6,30 @@
 #' @export
 #' @examples
 #' library(arboretum)
-#' tree()
-#' tree('dinosauria')
-#' tree('dinosauria',
-#' 	 collapse = c('sauropodomorpha',
-#' 	 			 'ornithopoda',
-#' 	 			 'theropoda',
-#' 	 			 'ankylosauria',
-#' 	 			 'stegosauria',
-#' 	 			 'pachycephalosauria',
-#' 	 			 'ceratopsia'))
+#' tree('tetrapodomorpha')
+#' tree('reptiliomorpha', collapse=c('diapsida', 'therapsida'), xmin=-345, xmax=-252)
+#' tree('therapsida', xmax=-200)
 #' tree('ornithischia', collapse='none')
 #' tree('sauropoda', collapse='none')
-#' tree('tetanurae', collapse='avialae')
-#' tree('sauropterygia', collapse='none')
-#' tree('synapsida')
+#' tree('tyrannosauroidea', collapse='avialae', xmin=-173)
 
 tree = function(taxon=NULL, collapse=NULL, ...) {
 
 	# df = prepare_tree_data(taxon=taxon, collapse=collapse)
 	df = tree_data(taxon=taxon, collapse=collapse)
 
+	print(summary(df))
+
 	plot_tree_data(df, ...)
 
+}
+
+taxa = function(regex=NULL){
+	taxa = sort(load_tree_data()$taxon)
+	if (!is.null(regex)) {
+		taxa = taxa |> purrr::keep(stringr::str_detect, regex)
+	}
+	writeLines(taxa)
 }
 
 # get_collapsable_taxa = function(df, taxon) {
@@ -66,7 +67,7 @@ rescale_y = function(df) {
 	df |> dplyr::mutate(y = .data$y |> rescale(0, 1))
 }
 
-plot_tree_data = function(df, max_tips=100, textsize=3, xmin=NULL, xmax=NULL) {
+plot_tree_data = function(df, max_tips=100, textsize=3.5, xmin=NULL, xmax=NULL) {
 
 	# # check_xmin
 	# # default = min(df$from) - (max(df$to) - min(df$from)) * 0.01
@@ -104,9 +105,9 @@ plot_tree_data = function(df, max_tips=100, textsize=3, xmin=NULL, xmax=NULL) {
 	df = df |> dplyr::filter(.data$from < !!xmax | .data$to > !!xmin)
 	df = df |> rescale_y()
 
-	# # df = check_n_tips(df, max_tips)
+	# df = check_n_tips(df, max_tips)
 	# if(get_n_tips(df) > max_tips) {
-	# 	warning('number of tips exceeds max_tips (', max_tips, ')')
+	# 	warning('number of tips exceeds max_tips (', max_tips, ') - returning NULL')
 	# 	return(NULL)
 	# }
 
