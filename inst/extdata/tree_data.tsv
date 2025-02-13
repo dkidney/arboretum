@@ -51,6 +51,7 @@ archosauromorpha	-260	-0	archelosauria	archosauriformes, ichthyosauromorpha, rhy
 ardipithecus	-5.77	-4.4	hominini	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 argentinosaurus	-96.2	-92.19	titanosauria	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 artiodactyla	-60	-0	laurasiatheria	andrewsarchus, cetacea, entelodontidae, hippopotamidae, tylopoda, suina, giraffidae, bovidae	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+astrapotheria	-59	-6.8	meridiungulata	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 atrociraptor	-72.2	-71.5	eudromaeosauria	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 attenborosaurus	-196.5	-189.6	pliosauridae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 aurornis	-160	-160	anchiornithidae	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -66,7 +67,8 @@ baryonyx	-130	-125	spinosauridae	NA	'heavy claw', UK	NA	FALSE	FALSE	FALSE	TRUE	F
 basilosauridae	-43	-33.9	cetacea	basilosaurus, dorudon, perucetus	NA	family	FALSE	FALSE	FALSE	FALSE	TRUE
 basilosaurus	-41.3	-33.9	basilosauridae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 batrachotomus	-242	-237	pseudosuchia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
-biarmosuchia	-272.5	-252	therapsida	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
+biarmosuchia	-272.5	-252	therapsida	biarmosuchus, eotitanosuchus	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+biarmosuchus	-267	-267	biarmosuchia	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 bistahieversor	-75.5	-74.5	eutyrannosauria	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 borealopelta	-113	-100.5	nodosauridae	NA	'Northern shield'. Canada. Holotype specimen among the best-preserved dinosaur fossils of its size ever found: osteoderms in their life positions + remains of their keratin sheaths, skin, stomach contents, + melanosomes indicating reddish pinkish skin.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 borhyaena	-21	-15.5	borhyaenidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -85,7 +87,8 @@ carcharodontosaurus	-100	-94	carcharodontosauridae	NA	'jagged toothed lizard', N
 carnivora	-51.88	-0	ferae	canidae, felidae, ursidae	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 carnosauria	-180	-90	tetanurae	allosauridae, carcharodontosauridae, metriacanthosauridae	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 carnotaurus	-72	-69	abelisauridae	NA	'Meat bull'. South America. Two thick horns above the eyes. Relatively short, deep snout. Small, vestigial forelimbs.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
-caseasauria	-306	-254	synapsida	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
+caseasauria	-306	-254	synapsida	caseidae	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+caseidae	-300	-265	caseasauria	cotylorhynchus	NA	family	FALSE	FALSE	FALSE	FALSE	TRUE
 casuariiformes	-23	-0	palaeognathae	NA	cassowarys and emus	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 catarrhini	-35	-0	simiiformes	hominoidea, cercopithecidae	'Down nosed'. Old World monkeys.	tribe	TRUE	FALSE	FALSE	FALSE	TRUE
 centrosaurus	-76.5	-75.5	ceratopsidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -112,6 +115,7 @@ compsognathidae	-151.5	-108	coelurosauria	compsognathus, sinosauropteryx	NA	fami
 compsognathus	-150.8	-145	compsognathidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 concavenator	-125	-125	carcharodontosauridae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 corythosaurus	-77	-75.7	hadrosauridae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
+cotylorhynchus	-279.5	-270	caseidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 creodonta	-63.3	-8.8	ferae	hyaenodontidae, oxyaenidae	'Meat teeth'. North America, Europe, Asia, Africa.	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 crocodilia	-100	-0	crocodyliformes	alligatoroidea, crocodyloidea, gavialoidea	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 crocodylidae	-46	-0	crocodyloidea	crocodylus	NA	family	FALSE	FALSE	FALSE	FALSE	TRUE
@@ -122,7 +126,7 @@ crocodylus	-25	-0	crocodylidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 cryptoclididae	-170	-130	plesiosauria	cryptoclidus, kimmerosaurus	NA	family	FALSE	FALSE	FALSE	FALSE	TRUE
 cryptoclidus	-166	-160	cryptoclididae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 ctenosauriscidae	-247.5	-237	poposauroidea	NA	all species had large 'sails' on their backs	family	FALSE	FALSE	FALSE	TRUE	FALSE
-cynodontia	-260	-0	theriodontia	cynognathus, thrinaxodon, mammaliamorpha	'Dog teeth'.	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+cynodontia	-260	-0	therapsida	cynognathus, thrinaxodon, mammaliamorpha	'Dog teeth'.	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 cynognathus	-247	-237	cynodontia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 dacentrurus	-154	-140	stegosauria	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 daeodon	-29	-15.97	entelodontidae	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -184,6 +188,7 @@ entelodontidae	-37.2	-15.97	artiodactyla	daeodon, archaeotherium	NA	family	FALSE
 eodromaeus	-231.4	-229	theropoda	NA	'dawn runner', Argentina	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 eohippus	-55.8	-47.8	equidae	NA	'Dawn horse'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 eoraptor	-231	-228	theropoda	NA	maybe a sauropodomorph?	NA	FALSE	FALSE	FALSE	TRUE	FALSE
+eotitanosuchus	-267	-267	biarmosuchia	NA	'Dawn giant crocodile'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 eotyrannus	-130	-130	tyrannosauroidea	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 epidexipteryx	-164	-164	scansoriopterygidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 epihippus	-46.2	-38	equidae	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -202,6 +207,7 @@ europelta	-113	-113	nodosauridae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 eusthenopteron	-385	-385	tetrapodomorpha	NA	'Good strength fin'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 eustreptospondylus	-166	-154	megalosauridae	NA	'True Streptospondylus' or 'true reversed vertebra'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 eutheria	-125	-0	theria	placentalia	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+eutherocephalia	-260	-242.5	therocephalia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 eutyrannosauria	-90	-66	tyrannosauroidea	tyrannosauridae, dryptosaurus, appalachiosaurus, bistahieversor	NA	NA	TRUE	FALSE	FALSE	FALSE	TRUE
 fasolasuchus	-220	-213	pseudosuchia	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 felidae	-30.8	-0	carnivora	machairodontinae, panthera	NA	family	FALSE	FALSE	FALSE	FALSE	TRUE
@@ -226,7 +232,7 @@ gnathostomata	-445	-0	NA	chondrichthyes, osteichthyes, placodermi, acanthodii	ja
 gomphotheriidae	-28	-0.01	proboscidea	gomphotherium	'Nail beasts'.	family	FALSE	FALSE	FALSE	FALSE	TRUE
 gomphotherium	-16	-5	gomphotheriidae	NA	'Nail beast'. Eurasia, Africa, North America. Double set of straight tusks.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 gorgonops	-260	-254	gorgonopsia	NA	'Gorgon face'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
-gorgonopsia	-270	-252	theriodontia	gorgonops, lycaenops, inostrancevia, rubidgea	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+gorgonopsia	-270	-252	therapsida	gorgonops, lycaenops, inostrancevia, rubidgea	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 gorgosaurus	-76.5	-75	tyrannosauridae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 gorilla	-4	-0	gorillini	NA	NA	genus	TRUE	FALSE	FALSE	TRUE	FALSE
 gorillini	-8	-0	homininae	gorilla	NA	tribe	FALSE	FALSE	FALSE	FALSE	TRUE
@@ -281,11 +287,13 @@ leptosuchus	-237	-208.5	phytosauria	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 liopleurodon	-166	-155	pliosauridae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 lisowicia	-210	-205	dicynodontia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 lissamphibia	-250	-0	temnospondyli	anura, gymnophiona, urodela	'Smooth amphibians'. Includes all modern amphibians.	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+litopterna	-62.5	-0.012	meridiungulata	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 lotosaurus	-238	-238	poposauroidea	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 loxodonta	-7	-0	elephantidae	NA	Two extant species: L. africana (African bush elephant) and L. cyclotis (African forest elephant).	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 lupeosaurus	-295	-295	edaphosauridae	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 lycaenops	-260	-260	gorgonopsia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 lycopsis	-16.3	-9	borhyaenidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
+lycosuchidae	-265	-260	therocephalia	NA	NA	family	FALSE	FALSE	FALSE	TRUE	FALSE
 lystrosaurus	-255	-248	dicynodontia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 machaeroprosopus	-228	-209	phytosauria	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 machairodontinae	-14	-0.0117	felidae	smilodon, homotherium, amphimachairodus	NA	subfamily	TRUE	FALSE	FALSE	FALSE	TRUE
@@ -315,6 +323,7 @@ megaraptora	-130	-66	tyrannosauroidea	australovenator, fukuiraptor, megaraptor	N
 megatheriidae	-29	-0.008	pilosa	megatherium	NA	family	FALSE	FALSE	FALSE	FALSE	TRUE
 megatherium	-5	-0.01	megatheriidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 megistotherium	-19	-12	hyaenodontidae	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
+meridiungulata	-65	-0.012	placentalia	litopterna, astrapotheria, notoungulata, xenungulata, pyrotheria	NA	NA	TRUE	FALSE	FALSE	FALSE	TRUE
 mesohippus	-37	-32	equidae	NA	'Middle horse'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 mesonychia	-68	-28.4	laurasiatheria	mesonychidae, hapalodectidae	'Middle claws'.	NA	TRUE	FALSE	FALSE	FALSE	TRUE
 mesonychidae	-67	-28.4	mesonychia	mongolestes, ankalagon, dissacus, mesonyx	NA	family	TRUE	FALSE	FALSE	FALSE	TRUE
@@ -349,6 +358,7 @@ nothosauroidea	-251	-210	sauropterygia	simosaurus, nothosaurus	NA	superfamily	FA
 nothosaurus	-240	-210	nothosauroidea	NA	'False lizard'	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 notosuchia	-167	-11	crocodyliformes	notosuchus, sebecidae, simosuchus	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 notosuchus	-85	-85	notosuchia	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
+notoungulata	-61	-0.012	meridiungulata	toxodon	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 odontoceti	-33.9	-0	cetacea	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 ophiacodontidae	-308	-273	synapsida	NA	NA	family	FALSE	FALSE	FALSE	TRUE	FALSE
 ophthalmosaurus	-165	-157	ichthyosauromorpha	NA	'Eye lizard'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -404,7 +414,7 @@ phytosauria	-242	-201.4	pseudosuchia	leptosuchus, smilosuchus, parasuchus, macha
 pilosa	-55.8	-0	xenarthra	megatheriidae	sloths and anteaters	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 pistosauroidea	-251	-66	sauropterygia	pistosaurus, plesiosauria	NA	superfamily	FALSE	FALSE	FALSE	FALSE	TRUE
 pistosaurus	-247.2	-237	pistosauroidea	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
-placentalia	-90	-0	eutheria	afrotheria, euarchontoglires, laurasiatheria, xenarthra	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+placentalia	-90	-0	eutheria	meridiungulata, afrotheria, euarchontoglires, laurasiatheria, xenarthra	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 placerias	-230	-215	dicynodontia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 placodermi	-439	-358.9	gnathostomata	dunkleosteus	'Plate skin'.	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 placodontia	-245	-201.3	sauropterygia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -441,6 +451,7 @@ pterodactyloidea	-162.7	-66	pterosauria	ornithocheiroidea, pterodactylus, tapeja
 pterodactylus	-150.8	-148.5	pterodactyloidea	NA	'Winged finger'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 pterosauria	-228	-66	avemetatarsalia	dimorphodon, rhamphorhynchidae, pterodactyloidea	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 pyroraptor	-72	-72	eudromaeosauria	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
+pyrotheria	-63	-23	meridiungulata	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 quetzalcoatlus	-68	-66	azhdarchidae	NA	Name refers to the Aztec serpent god of the sky.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 rauisuchia	-240	-200	pseudosuchia	postosuchus, rauisuchus, polonosuchus	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 rauisuchus	-235	-228	rauisuchia	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -538,12 +549,11 @@ thalattosauria	-247	-201.4	archosauromorpha	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALS
 thalattosuchia	-201	-100	crocodylomorpha	metriorhynchidae, teleosauridae	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 thalattosuchus	-166	-160	metriorhynchidae	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 thecodontosaurus	-234	-234	sauropodomorpha	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
-therapsida	-285	-0	sphenacodontia	dicynodontia, dinocephalia, theriodontia, biarmosuchia	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+therapsida	-285	-0	sphenacodontia	biarmosuchia, dinocephalia, dicynodontia, gorgonopsia, therocephalia, cynodontia	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 theria	-130	-0	mammalia	eutheria, metatheria	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
-theriodontia	-275	-0	therapsida	cynodontia, gorgonopsia, therocephalia	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 therizinosauridae	-100	-66	maniraptora	therizinosaurus	NA	family	FALSE	FALSE	FALSE	FALSE	TRUE
 therizinosaurus	-70	-70	therizinosauridae	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
-therocephalia	-266	-242	theriodontia	NA	'beast head'.	NA	FALSE	FALSE	FALSE	TRUE	FALSE
+therocephalia	-266	-242	therapsida	lycosuchidae, eutherocephalia	'beast head'.	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 theropoda	-236	-0	saurischia	ceratosauria, coelophysoidea, eodromaeus, eoraptor, herrerasauridae, tawa, tetanurae	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 thrinaxodon	-252	-247	cynodontia	NA	'Trident tooth'.	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 thylacinidae	-28	-8e-5	marsupalia	NA	NA	family	FALSE	FALSE	FALSE	TRUE	FALSE
@@ -556,6 +566,7 @@ titanis	-5	-1.8	phorusrhacidae	NA	NA	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 titanophoneus	-268	-265	dinocephalia	NA	'Titanic murderer'	genus	FALSE	FALSE	FALSE	TRUE	FALSE
 titanosauria	-140	-66	sauropoda	argentinosaurus, dreadnoughtus, patagotitan, saltasauridae, paralititan	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
 torvosaurus	-165	-148	megalosauridae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
+toxodon	-5.3	-0.012	notoungulata	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 triceratops	-68	-66	ceratopsidae	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 troodon	-77.5	-76.5	troodontidae	NA	'wounding tooth', USA (Montana)	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 troodontidae	-150	-66	deinonychosauria	troodon	NA	family	FALSE	FALSE	FALSE	FALSE	TRUE
@@ -578,5 +589,6 @@ varanus	-20	-0	varanidae	NA	Includes V. komodoensis and V. priscus aka Megalania
 velociraptor	-75	-71	eudromaeosauria	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 vulcanodontidae	-199	-175	sauropoda	NA	NA	family	FALSE	FALSE	FALSE	TRUE	FALSE
 xenarthra	-60	-0	placentalia	cingulata, pilosa	NA	NA	FALSE	FALSE	FALSE	FALSE	TRUE
+xenungulata	-58.6	-48.7	meridiungulata	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 yutyrannus	-125	-125	tyrannosauroidea	NA	NA	NA	FALSE	FALSE	FALSE	TRUE	FALSE
 zalmoxes	-70	-66	ornithopoda	NA	Romania. Name after the Dacian deity Zalmoxis.	genus	FALSE	FALSE	FALSE	TRUE	FALSE

@@ -4,16 +4,16 @@
 \alias{tree}
 \title{plot tree data}
 \usage{
-tree(taxon = NULL, collapse = NULL, max_tips = 300, ...)
+tree(taxon = NULL, collapse = NULL, ...)
 }
 \arguments{
 \item{taxon}{TODO}
 
 \item{collapse}{TODO}
 
-\item{max_tips}{TODO}
-
 \item{...}{TODO}
+
+\item{max_tips}{TODO}
 }
 \description{
 plot tree data

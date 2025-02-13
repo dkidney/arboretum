@@ -227,7 +227,7 @@ collapse = function(df, taxa=NULL) {
 	# if (length(taxa) == 1 && taxa == 'default' && get_n_tips(df) > 20){
 	if (length(taxa) == 1 && taxa == 'default'){
 		# taxa = get_default_collapsed(df)
-		taxa = node_taxa |> purrr::keep(stringr::str_detect, '(morpha|formes|oidea|ae)$')
+		taxa = node_taxa |> purrr::keep(stringr::str_detect, '(morpha|formes|oidea|idae|inae|ini|ina)$')
 	} else {
 		taxa = taxa |> purrr::keep(~.x %in% node_taxa)
 	}
@@ -631,7 +631,7 @@ add_y = function(df) {
 	# 	df |> get_nodes(include_roots=TRUE)
 	# )
 	df$y = NA_integer_
-	i = df$is_node
+	# i = !df$is_tip
 
 	# browser()
 

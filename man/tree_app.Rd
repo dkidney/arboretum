@@ -4,7 +4,7 @@
 \alias{tree_app}
 \title{shiny app}
 \usage{
-tree_app(taxon = "tetrapodomorpha")
+tree_app(taxon = "tetrapodomorpha", collapse = NULL, ...)
 }
 \arguments{
 \item{taxon}{TODO}

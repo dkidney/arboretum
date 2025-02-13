@@ -61,9 +61,10 @@ StatSigmoid <- ggplot2::ggproto(
 
 # rescale(0:10, 0, 1)
 # rescale(0:10, 1, 0)
-rescale = function(x, new_min, new_max) {
+rescale = function(x, new_min=0, new_max=1) {
 	# browser()
 	y = (x - min(x, na.rm=TRUE)) / diff(range(x, na.rm=TRUE))
+	y[is.nan(y)] = (new_max + new_min) / 2
 	y = y * (new_max - new_min)
 	y + new_min
 }
