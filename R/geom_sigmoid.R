@@ -18,7 +18,12 @@
 geom_sigmoid <- function(
 		mapping = NULL, data = NULL, geom = "line",
 		position = "identity", na.rm = FALSE, show.legend = NA,
-		n = 20, c1 = 0.1, c2 = 0, inherit.aes = TRUE,
+		n = 20,
+		# c1 = 0.1, c2 = 0, # normal-looking sigmoid
+		# c1 = 0.1, c2 = -1, # half-sigmoid
+		# c1 = 10, c2 = 0, # straight lines
+		c1 = 0.3, c2 = -1, # half-sigmoid
+		inherit.aes = TRUE,
 		...
 ) {
 	ggplot2::layer(

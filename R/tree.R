@@ -16,7 +16,8 @@
 tree = function(taxon=NULL, collapse=NULL, ...) {
 
 	# df = prepare_tree_data(taxon=taxon, collapse=collapse)
-	df = tree_data(taxon=taxon, collapse=collapse)
+	df = tree_data(taxon=stringr::str_to_lower(taxon),
+				   collapse=stringr::str_to_lower(collapse))
 
 	print(summary(df))
 
@@ -63,11 +64,20 @@ auto_xmax = function(df, xmax=NULL) {
 	xmax
 }
 
-rescale_y = function(df) {
-	df |> dplyr::mutate(y = .data$y |> rescale(0, 1))
-}
+# rescale_y = function(df) {
+# 	df |> dplyr::mutate(y = .data$y |> rescale(0, 1))
+# }
 
-plot_tree_data = function(df, max_tips=100, textsize=3.5, xmin=NULL, xmax=NULL) {
+# rescale_y = function(df) {
+# 	# browser()
+# 	n_tips = get_n_tips(df)
+# 	d = 1 / (n_tips * 2)
+# 	ymin = d
+# 	ymax = 1 - d
+# 	df |> dplyr::mutate(y = .data$y |> rescale(ymin, ymax))
+# }
+
+plot_tree_data = function(df, max_tips=100, textsize=3, xmin=NULL, xmax=NULL) {
 
 	# # check_xmin
 	# # default = min(df$from) - (max(df$to) - min(df$from)) * 0.01
@@ -103,7 +113,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3.5, xmin=NULL, xmax=NULL) 
 	}
 	stopifnot(xmax > xmin)
 	df = df |> dplyr::filter(.data$from < !!xmax | .data$to > !!xmin)
-	df = df |> rescale_y()
+	# df = df |> rescale_y()
 
 	# df = check_n_tips(df, max_tips)
 	# if(get_n_tips(df) > max_tips) {
@@ -123,6 +133,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3.5, xmin=NULL, xmax=NULL) 
 		dplyr::mutate(
 			label_x = dplyr::case_when(
 				.data$is_tip ~ (pmax(.data$from, xmin) + pmin(.data$to, xmax)) / 2,
+				stringr::str_detect(.data$taxon, '^unnamed') ~ NA_real_,
 				.default = .data$from
 			)
 		)
@@ -132,7 +143,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3.5, xmin=NULL, xmax=NULL) 
 	# browser()
 	plt = df |>
 		base_plot() +
-		ggplot2::coord_cartesian(xlim=c(xmin, xmax))
+		ggplot2::coord_cartesian(xlim=c(xmin, xmax), ylim=c(0, 1.02))
 
 	# x breaks -----------------------------------------------------------------
 
@@ -166,7 +177,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3.5, xmin=NULL, xmax=NULL) 
 			geom_sigmoid(
 				ggplot2::aes(x=.data$x, y=.data$y, xend=.data$xend, yend=.data$yend),
 				data = parent_child_relationships,
-				col = 'grey50'
+				col = 'grey65'
 			)
 	}
 
@@ -190,7 +201,7 @@ plot_tree_data = function(df, max_tips=100, textsize=3.5, xmin=NULL, xmax=NULL) 
 		# 	size = textsize,
 		# ) +
 		ggplot2::geom_text(
-			ggplot2::aes(x=.data$label_x, label=.data$taxon),
+			ggplot2::aes(y=.data$y, x=.data$label_x, label=.data$taxon),
 			vjust=-0.5,
 			size = textsize,
 		) +

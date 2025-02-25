@@ -62,15 +62,15 @@ summary.tree_data = function(object, ...) {
 		n_tips = get_n_tips(df),
 		tips = get_tips(df)$taxon,
 		n_collapsed = get_n_collapsed(df),
-		collapsed = get_collapsed(df)$taxon
+		collapsed = sort(get_collapsed(df)$taxon)
 	)
 
-	if ((out$n_roots + out$n_nodes + out$n_tips) != nrow(df)) {
-		browser()
+	if (nrow(df) > 1) {
+		if ((out$n_roots + out$n_nodes + out$n_tips) != nrow(df)) {
+			browser()
+		}
+		stopifnot((out$n_roots + out$n_nodes + out$n_tips) == nrow(df))
 	}
-
-	stopifnot((out$n_roots + out$n_nodes + out$n_tips) == nrow(df))
-
 	structure(out, class = c('summary_tree_data', class(out)))
 }
 
@@ -221,13 +221,26 @@ update_indicator_columns = function(df) {
 
 collapse = function(df, taxa=NULL, max_tips=100) {
 	# browser()
-	if (missing(taxa) || is.null(taxa) || (length(taxa) == 1 && is.na(taxa))) taxa = 'default'
+	# if (missing(taxa) || is.null(taxa) || (length(taxa) == 1 && is.na(taxa))) taxa = 'default'
+	if (missing(taxa) || is.null(taxa) || length(taxa) == 0 || (length(taxa) == 1 && is.na(taxa))) taxa = 'default'
+	# if (missing(taxa) || is.null(taxa) || length(taxa) <= 1 || is.na(taxa)) taxa = 'default'
 	if (length(taxa) == 1 && taxa == 'none') return(df)
 	node_taxa = get_nodes(df)$taxon
 	# if (length(taxa) == 1 && taxa == 'default' && get_n_tips(df) > 20){
+	ranks = c(
+		'superfamily' = 'oidea',
+		'family' = 'idae',
+		'subfamily' = 'inae',
+		'tribe' = 'ini',
+		'subtribe' = 'ina'
+	)
 	if (length(taxa) == 1 && taxa == 'default'){
 		# taxa = get_default_collapsed(df)
-		taxa = node_taxa |> purrr::keep(stringr::str_detect, '(morpha|formes|oidea|idae|inae|ini|ina)$')
+		# taxa = node_taxa |> purrr::keep(stringr::str_detect, '(opoda|theria|morpha|formes|oidea|idae|inae|ini|ina)$')
+		taxa = node_taxa |> purrr::keep(stringr::str_detect, '(opoda|sauria|suchia|theria|morpha|formes|oidea|ae|ini|ina)$')
+	} else 	if (length(taxa) == 1 && taxa %in% names(ranks)) {
+		suffix = ranks[names(ranks) == taxa]
+		taxa = node_taxa |> purrr::keep(stringr::str_detect, stringr::str_glue('{suffix}$'))
 	} else {
 		taxa = taxa |> purrr::keep(~.x %in% node_taxa)
 	}
@@ -287,7 +300,7 @@ collapse = function(df, taxa=NULL, max_tips=100) {
 	df
 }
 
-get_hierarchy = function(taxon){
+ancestry = function(taxon){
 	df = load_tree_data()
 	hierarchy = stringr::str_to_lower(taxon)
 	for (i in 1:nrow(df)) { # i=1
@@ -353,7 +366,7 @@ reorder_tree_data = function(df) { # df = plt$data ; print(df, n=Inf)
 		ranks = integer(0)
 		taxon = df$taxon[i]
 		for (j in 1:nrow(df)) {
-		# while (length(taxon) > 0) {
+			# while (length(taxon) > 0) {
 			# print(taxon)
 			# if (taxon == 'tetrapodomorpha') browser()
 			siblings = get_siblings(df, taxon)

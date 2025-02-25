@@ -104,8 +104,9 @@ split_geotime_by_timescale = function(geotime) {
 load_events = function() {
 	dplyr::tribble(
 		~label  , ~ma    , ~col,
-		'GABI'  , 2.7    , 'blue',
-		'K-Pg'  , 66     , 'red',
+		'GABI'  ,   2.7  , 'blue',
+		'K-Pg'  ,  66    , 'red',
+		'CTM'   ,  90    , 'blue',
 		'Tr-J'  , 201.3  , 'red',
 		'P-Tr'  , 251.902, 'red',
 		'CRC'   , 305    , 'blue',

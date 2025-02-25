@@ -1,7 +1,7 @@
 
 base_plot = function(df, textsize=3) {
 
-	df$y = rescale(df$y, 0, 1)
+	df = rescale_y(df)
 
 	geotime = load_geotime() |>
 		split_geotime_by_timescale()
@@ -47,7 +47,8 @@ base_plot = function(df, textsize=3) {
 
 	fill = TRUE
 
-	buffer = 0.05
+	# buffer = 0.05
+	buffer = 0
 	ys = -buffer # lower limit of main plotting area
 	ys = c(ys, ys[1] - 0.09) # height of age label boxes
 	ys = c(ys, ys[2] - 0.03) # height of epoch label boxes
@@ -305,28 +306,28 @@ base_plot = function(df, textsize=3) {
 	#
 	# 	# events -------------------------------------------------------------------
 	#
-		events = load_events()
+	events = load_events()
 
-		plt = plt +
-			ggplot2::geom_segment(
-				ggplot2::aes(x=.data$ma, xend=.data$ma),
-				data = events,
-				y=ys[4],
-				yend=1 + buffer,
-				col=events$col,
-				lty=1, lwd=0.5,
-				inherit.aes = FALSE
-			) +
-			ggplot2::geom_text(
-				ggplot2::aes(x=.data$ma, label=.data$label),
-				data = events,
-				size=textsize,
-				# y=y_max_main,
-				y = 1 + buffer,
-				col='grey50',
-				vjust = -0.5,
-				inherit.aes = FALSE
-			)
+	plt = plt +
+		ggplot2::geom_segment(
+			ggplot2::aes(x=.data$ma, xend=.data$ma),
+			data = events,
+			y=ys[4],
+			yend=1 + buffer,
+			col=events$col,
+			lty=1, lwd=0.5,
+			inherit.aes = FALSE
+		) +
+		ggplot2::geom_text(
+			ggplot2::aes(x=.data$ma, label=.data$label),
+			data = events,
+			size=textsize,
+			# y=y_max_main,
+			y = 1 + buffer,
+			col='grey50',
+			vjust = -0.5,
+			inherit.aes = FALSE
+		)
 
 	plt +
 		ggplot2::theme(
@@ -335,9 +336,19 @@ base_plot = function(df, textsize=3) {
 			panel.background = ggplot2::element_blank(),
 			# axis.title.x = ggplot2::element_blank(),
 			# axis.line.x = ggplot2::element_line(),
-			# axis.title.y = ggplot2::element_blank(),
-			# axis.text.y = ggplot2::element_blank(),
-			# axis.ticks.y = ggplot2::element_blank(),
+			axis.title.y = ggplot2::element_blank(),
+			axis.text.y = ggplot2::element_blank(),
+			axis.ticks.y = ggplot2::element_blank(),
 			legend.position = "none"
 		)
 }
+
+rescale_y = function(df) {
+	# browser()
+	n_tips = get_n_tips(df)
+	d = 1 / (n_tips * 2)
+	ymin = d
+	ymax = 1 - d
+	df |> dplyr::mutate(y = .data$y |> rescale(ymin, ymax))
+}
+
