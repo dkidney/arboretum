@@ -50,6 +50,14 @@ knitr::opts_chunk$set(
 )
 ```
 
+There are two main functions in this package:
+
+* `tree()` - plot static trees using the `ggplot2` library as a backend
+
+* `tree_app()` - an experimental Shiny app for dynamic exploration of tree structure
+
+## `tree()`
+
 Plot a tree for a specific using the `taxon` argument. 
 
 By default, any branch node ending in '-morpha', '-formes', '-oidea', '-idae', '-inae', '-ini' or '-ina' will be collapsed, unless you use the `collapse` argument to specify which taxa you wish to collapse.

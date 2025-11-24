@@ -25,8 +25,17 @@ Load the package (and check the version)
 ``` r
 library(arboretum)
 packageVersion("arboretum")
-#> [1] '0.2.0.9000'
+#> [1] '0.2.0'
 ```
+
+There are two main functions in this package:
+
+- `tree()` - plot static trees using the `ggplot2` library as a backend
+
+- `tree_app()` - an experimental Shiny app for dynamic exploration of
+  tree structure
+
+## `tree()`
 
 Plot a tree for a specific using the `taxon` argument.
 
@@ -38,14 +47,6 @@ Here are some examples.
 
 ``` r
 tree('tetrapodomorpha')
-#> 1 root: tetrapodomorpha
-#> 5 nodes
-#> 16 tips
-#> 2 collapsed:
-#> - archegosauridae
-#> - reptiliomorpha
-#> Warning: Removed 2 rows containing missing values or values outside the scale range
-#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
@@ -54,14 +55,6 @@ tree('tetrapodomorpha')
 
 ``` r
 tree('reptiliomorpha', collapse=c('diapsida', 'therapsida'), xmin=-345, xmax=-252)
-#> 1 root: reptiliomorpha
-#> 12 nodes
-#> 15 tips
-#> 2 collapsed:
-#> - diapsida
-#> - therapsida
-#> Warning: Removed 2 rows containing missing values or values outside the scale range
-#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
@@ -70,13 +63,6 @@ tree('reptiliomorpha', collapse=c('diapsida', 'therapsida'), xmin=-345, xmax=-25
 
 ``` r
 tree('therapsida', xmax=-200)
-#> 1 root: therapsida
-#> 6 nodes
-#> 18 tips
-#> 1 collapsed:
-#> - mammaliamorpha
-#> Warning: Removed 2 rows containing missing values or values outside the scale range
-#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
@@ -85,12 +71,6 @@ tree('therapsida', xmax=-200)
 
 ``` r
 tree('ornithischia', collapse='none')
-#> 1 root: ornithischia
-#> 12 nodes
-#> 40 tips
-#> 0 collapsed
-#> Warning: Removed 2 rows containing missing values or values outside the scale range
-#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
@@ -99,12 +79,6 @@ tree('ornithischia', collapse='none')
 
 ``` r
 tree('sauropoda', collapse='none')
-#> 1 root: sauropoda
-#> 6 nodes
-#> 18 tips
-#> 0 collapsed
-#> Warning: Removed 2 rows containing missing values or values outside the scale range
-#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
@@ -113,12 +87,6 @@ tree('sauropoda', collapse='none')
 
 ``` r
 tree('tyrannosauroidea', collapse='avialae', xmin=-173)
-#> 1 root: tyrannosauroidea
-#> 3 nodes
-#> 18 tips
-#> 0 collapsed
-#> Warning: Removed 2 rows containing missing values or values outside the scale range
-#> (`geom_text()`).
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
