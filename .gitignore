@@ -49,3 +49,7 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 .Rproj.user
+
+# data / image files
+man/figures
+*.png
